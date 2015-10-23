@@ -7,7 +7,7 @@ p_stated_in = 'P248'
 p_half_life = 'P2114'
 p_ref_url = 'P854'
 p_retrieved = 'P813'
-p_title = 'P1476'
+p_edition = 'P393'
 nndc_qid = 'Q16821319'
 
 retrieval_date = pywikibot.WbTime(year=2015, month=10, day=15)
@@ -123,15 +123,14 @@ def process_nndc_data(filename):
                     nuclide_name))
                 new_claim = add_quantity_claim(nuclide, p_half_life, [half_life, uncertainty, time_unit])
                 source_map = {p_stated_in: ['item', nndc_qid],
-# monolingual text not supported by pywikibot yet?
-#                          p_title: ['monolingualtext', {'text': 'Half life data from NuDat 2.6 database', 'language': 'en'}],
+                          p_edition: ['string', 'NuDat 2.6'],
                           p_ref_url: ['string', nndc_url],
                           p_retrieved: ['date', retrieval_date]}
                 print('Add source: {0}'.format(nndc_url))
                 create_source_claim(new_claim, source_map)
             else:
                 source_map = {p_stated_in: ['item', nndc_qid],
-#                          p_title: ['monolingualtext', {'text': 'Half life data from NuDat 2.6 database', 'language': 'en'}],
+                          p_edition: ['string', 'NuDat 2.6'],
                           p_ref_url: ['string', nndc_url]}
                 if not check_source_set(hl_claim, source_map):
                     source_map[p_retrieved] = ['date', retrieval_date]
