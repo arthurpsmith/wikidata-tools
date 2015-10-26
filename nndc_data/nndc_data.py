@@ -52,7 +52,7 @@ def nndc_half_life(protons, neutrons):
 
     unc_factor = 1.0
     if half_life is not None:
-        m = re.match(r'([\d\.E]+)\s+(\S+)\s*$', half_life, re.UNICODE)
+        m = re.search(r'([\d\.E]+)\s+(\S+)\s*$', half_life, re.UNICODE)
         if m is not None:
             hl_string = m.group(1)
             half_life_unit = m.group(2)

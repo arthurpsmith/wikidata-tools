@@ -10,7 +10,7 @@ p_retrieved = 'P813'
 p_edition = 'P393'
 nndc_qid = 'Q16821319'
 
-retrieval_date = pywikibot.WbTime(year=2015, month=10, day=15)
+retrieval_date = pywikibot.WbTime(year=2015, month=10, day=26)
 
 precision = 10 ** -10
 
@@ -116,6 +116,8 @@ def process_nndc_data(filename):
         for row in reader:
             nuclide_qid, half_life, uncertainty, time_unit, time_unit_string, nuclide_name, nndc_url = row
             nuclide = get_item(nuclide_qid)
+            if uncertainty == 'None':
+                uncertainty = half_life
             hl_claim = check_claim_and_uncert(nuclide, p_half_life, [half_life, uncertainty, time_unit])
             if (hl_claim is None):
                 print('New entry: {0}+-{1}{2} for {3} ({4})'.format(
