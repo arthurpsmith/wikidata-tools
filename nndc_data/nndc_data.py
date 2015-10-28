@@ -1,9 +1,11 @@
 #
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 from lxml import html
 import requests
 import re
+import sys
 
 nndc_url = 'http://www.nndc.bnl.gov/nudat2/reCenter.jsp'
 
@@ -52,7 +54,7 @@ def nndc_half_life(protons, neutrons):
 
     unc_factor = 1.0
     if half_life is not None:
-        m = re.search(r'([\d\.E]+)\s+(\S+)\s*$', half_life, re.UNICODE)
+        m = re.search(r'([-\d\.E\+]+)\s+(\S+)\s*$', half_life, re.UNICODE)
         if m is not None:
             hl_string = m.group(1)
             half_life_unit = m.group(2)
@@ -60,11 +62,13 @@ def nndc_half_life(protons, neutrons):
             if '.' in hl_string:
                 digits = 0
                 expt = 0
-                m2 = re.match(r'\.(\d+)E(\d+)$', hl_string)
+                m2 = re.search(r'\.(\d+)E([-\+]?\d+)$', hl_string)
                 if m2 is None:
+                    print("No match for {}".format(hl_string), file=sys.stderr)
                     parts = hl_string.split('.')
                     digits = len(parts[1])
                 else:
+                    print("Found match for {}".format(hl_string), file=sys.stderr)
                     digits = len(m2.group(1))
                     expt = int(m2.group(2))
                 unc_factor = 10.0 ** (expt - digits)
