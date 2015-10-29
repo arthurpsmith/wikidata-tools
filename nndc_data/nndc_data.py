@@ -1,11 +1,9 @@
 #
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
 from lxml import html
 import requests
 import re
-import sys
 
 nndc_url = 'http://www.nndc.bnl.gov/nudat2/reCenter.jsp'
 
@@ -19,7 +17,8 @@ time_units_to_qids = {
     'µS': 'Q842015',      # microsecond
     'ns': 'Q838801',      # nanosecond
     'ps': 'Q3902709',     # picosecond
-    'fs': 'Q1777507'      # femtosecond
+    'fs': 'Q1777507',     # femtosecond
+    'as': 'Q2483628'      # attosecond
 }
 
 
@@ -64,11 +63,9 @@ def nndc_half_life(protons, neutrons):
                 expt = 0
                 m2 = re.search(r'\.(\d+)E([-\+]?\d+)$', hl_string)
                 if m2 is None:
-                    print("No match for {}".format(hl_string), file=sys.stderr)
                     parts = hl_string.split('.')
                     digits = len(parts[1])
                 else:
-                    print("Found match for {}".format(hl_string), file=sys.stderr)
                     digits = len(m2.group(1))
                     expt = int(m2.group(2))
                 unc_factor = 10.0 ** (expt - digits)
