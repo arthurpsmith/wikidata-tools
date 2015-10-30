@@ -15,6 +15,7 @@ time_units_to_qids = {
     'y': 'Q1092296',      # year (annum)
     'ms': 'Q723733',      # millisecond
     'µS': 'Q842015',      # microsecond
+    u'\xb5S': 'Q842015',      # microsecond unicode encoding
     'ns': 'Q838801',      # nanosecond
     'ps': 'Q3902709',     # picosecond
     'fs': 'Q1777507',     # femtosecond
