@@ -37,7 +37,10 @@ def get_claim_with_qualifiers(item, property, target, qualifiers):
 
     claim_exists = False
     for claim in claims:
-        if not claim.target_equals(target):
+        if target is None: # find claims with 'unknown' target
+           if not claim.getSnakType() == 'somevalue':
+               continue
+        elif not claim.target_equals(target):
             continue
         qual_missing = False
         for qual in qualifiers:
@@ -67,48 +70,42 @@ def check_or_fix_proportion(claim, pct):
     
     return False
 
-def check_source_set(claim, source_map):
+
+# Find a source that has the same reference URL value (if any)
+def find_matching_source(claim, ref_url_to_match):
     source_claims = claim.getSources()
-    if len(source_claims) == 0:
-        return False
 
     for source in source_claims:
-        all_properties_present = True
-        for property in source_map.keys():
-            target_type, source_value = source_map[property]
-            try:
-                sources_with_property = source[property]
-            except:
-                continue
-            found = False
-            if target_type == 'item':
-                found = source_value in map(lambda src: src.target.id, sources_with_property)
-            elif target_type == 'string':
-                found = source_value in map(lambda src: src.target, sources_with_property)
-            if not found:
-                all_properties_present = False
-                break
-        if all_properties_present:
-            return True
-    return False
+        if not p_ref_url in source:
+            continue
+        ref_url_sources = source[p_ref_url]
+        if ref_url_to_match in map(lambda src: src.target, ref_url_sources):
+            return source
+    return None
 
 
 def add_decay_claim(item, decay_to_qid, decay_mode_qid, pct):
     claim = pywikibot.Claim(repo, p_decays_to)
-    target_page = pywikibot.ItemPage(repo, decay_to_qid)
-    claim.setTarget(target_page)
-
-    decay_mode_page = pywikibot.ItemPage(repo, decay_mode_qid)
-    qual_mode = pywikibot.Claim(repo, p_decay_mode)
-    qual_mode.setTarget(decay_mode_page)
-    claim.addQualifier(qual_mode)
-
-    qual_frac = pywikibot.Claim(repo, p_proportion)
-    wb_quant = pywikibot.WbQuantity(0.01 * pct, unit = '1', error = 0.0)
-    qual_frac.setTarget(wb_quant)
-    claim.addQualifier(qual_frac)
-
+    if decay_to_qid is None: # Handle 'unknown' case
+        claim.setSnakType('somevalue')
+    else:
+        target_page = pywikibot.ItemPage(repo, decay_to_qid)
+        claim.setTarget(target_page)
     item.addClaim(claim, bot=True, summary="Adding decay mode claim from NNDC.")
+
+    dm_qids = decay_mode_qid.split('|')
+    for dm_qid in dm_qids:
+        decay_mode_page = pywikibot.ItemPage(repo, dm_qid)
+        qual_mode = pywikibot.Claim(repo, p_decay_mode)
+        qual_mode.setTarget(decay_mode_page)
+        claim.addQualifier(qual_mode)
+
+    if pct is not None:
+        qual_frac = pywikibot.Claim(repo, p_proportion)
+        wb_quant = pywikibot.WbQuantity(0.01 * pct, unit = '1', error = 0.0)
+        qual_frac.setTarget(wb_quant)
+        claim.addQualifier(qual_frac)
+
     return claim
 
 
@@ -126,38 +123,71 @@ def create_source_claim(claim, source_map):
     claim.addSources(source_claims, bot=True)
     return True
 
+
+def update_source(claim, source, source_map):
+    matches = True
+    for property in source_map.keys():
+        target_type, source_value = source_map[property]
+        if not property in source:
+            matches = False
+            break
+        found = False
+        sources_with_property = source[property]
+        if target_type == 'item':
+            found = source_value in map(lambda src: src.target.id, sources_with_property)
+        elif target_type == 'string':
+            found = source_value in map(lambda src: src.target, sources_with_property)
+        else:
+            found = True # Don't worry about non-string, non-item matches
+        if not found:
+           matches = False
+           break
+    if not matches:
+        claim.removeSources(sum(source.values(), []))
+        create_source_claim(claim, source_map)
+
+
+def check_or_fix_source(claim, ref_url):
+    old_source = find_matching_source(claim, ref_url)
+    source_map = {p_stated_in: ['item', nudat_qid],
+        p_edition: ['string', '2.6'],
+        p_ref_url: ['string', ref_url],
+        p_retrieved: ['date', retrieval_date]}
+
+    if old_source is None:
+        create_source_claim(claim, source_map)
+    else:
+        update_source(claim, old_source, source_map)
+
+
 def process_nndc_data(filename):
     with open(filename) as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             nuclide_qid, decay_mode, decay_mode_qid, pct, decay_to_qid, nuclide_name, nndc_url = row
+            if decay_mode_qid == 'None': # decay mode unrecognized - skip
+                continue
             if pct == 'None':
                 pct = None
             else:
                 pct = float(pct)
+            if decay_to_qid == 'None':
+                decay_to_qid = None
             print('checking: {0}->{1} via {2} ({3}%) - {4}'.format(
                     nuclide_qid, decay_to_qid, decay_mode_qid, pct, nuclide_name))
             nuclide = get_item(nuclide_qid)
-            decay_claim = get_claim_with_qualifiers(nuclide, p_decays_to, decay_to_qid, [[p_decay_mode, decay_mode_qid]])
+            dm_qids = decay_mode_qid.split('|')
+            decay_claim = get_claim_with_qualifiers(nuclide, p_decays_to, decay_to_qid, map(lambda qid: [p_decay_mode, qid], dm_qids))
             if (decay_claim is None):
-                print('New entry: {0}->{1} via {2} ({3}) - {4}'.format(
-                    nuclide_qid, decay_to_qid, decay_mode_qid, pct, nuclide_name))
                 new_claim = add_decay_claim(nuclide, decay_to_qid, decay_mode_qid, pct)
                 source_map = {p_stated_in: ['item', nudat_qid],
                           p_edition: ['string', '2.6'],
                           p_ref_url: ['string', nndc_url],
                           p_retrieved: ['date', retrieval_date]}
-                print('Add source: {0}'.format(nndc_url))
                 create_source_claim(new_claim, source_map)
             else:
-                print('Found claim!: {0}'.format(decay_claim))
-                if pct != 'None':
+                if pct is not None:
                     check_or_fix_proportion(decay_claim, pct)
-                source_map = {p_stated_in: ['item', nudat_qid],
-                          p_edition: ['string', '2.6'],
-                          p_ref_url: ['string', nndc_url]}
-                if not check_source_set(decay_claim, source_map):
-                    source_map[p_retrieved] = ['date', retrieval_date]
-                    create_source_claim(decay_claim, source_map)
+                check_or_fix_source(decay_claim, nndc_url)
 
 process_nndc_data('test2.csv')
