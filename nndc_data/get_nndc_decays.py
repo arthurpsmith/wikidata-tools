@@ -8,8 +8,6 @@ import sys
 
 #
 
-UNKNOWN_QID = 'Q4294967294'
-
 UTF8Writer = codecs.getwriter('utf8')
 sys.stdout = UTF8Writer(sys.stdout)
 
@@ -41,8 +39,8 @@ for nuclide in nuclides:
             if key in nuclides_by_protons_neutrons:
                 decays_to = nuclides_by_protons_neutrons[key]
             else:
-                decays_to = UNKNOWN_QID
+                decays_to = None
         else:
-            decays_to = UNKNOWN_QID
+            decays_to = None
         print u"{0},{1},{2},{3},{4},{5},{6}".format(nuclide.item_id,
             mode, mode_qid, pct, decays_to, nuclide.label, source_url)

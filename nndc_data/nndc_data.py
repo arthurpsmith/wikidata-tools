@@ -31,14 +31,27 @@ def nndc_time_id(time_unit):
 
 decay_modes_to_qids = {
     u'\u03b2-': 'Q14646001',  # beta minus decay
-    u'2\u03b2-': 'Q901747',   # double beta decay
-    u'\u03b2': 'Q1357356',    # positron emission (beta plus)
+    u'2\u03b2-': 'Q18907407',   # double beta - decay
+    u'\u03b2+': 'Q1357356',    # positron emission (beta plus)
     u'\u03b5': 'Q109910',     # electron capture
     u'2\u03b5': 'Q520827',    # double electron capture
     u'\u03b1': 'Q179856',     # alpha decay
     'n': 'Q898923',           # neutron emission
     'p': 'Q902157',           # proton emission
-    'SF': 'Q146682'           # spontaneous fission
+    'SF': 'Q146682',          # spontaneous fission
+    '2p': 'Q9253686',         # 2-proton decay
+    '2n': 'Q21456752',        # 2-neutron decay
+    u'\u03b2-n': 'Q14646001|Q898923',  # beta minus + neutron decay
+    u'\u03b2-2n': 'Q14646001|Q21456752',  # beta minus + 2 neutron decay
+    u'\u03b2-3n': 'Q14646001|Q21457084',  # beta minus + 3 neutron decay
+    u'\u03b2-4n': 'Q14646001|Q21457201',  # beta minus + 4 neutron decay
+    u'\u03b2-\u03b1': 'Q14646001|Q179856',  # beta minus + alpha decay
+    u'\u03b2-n\u03b1': 'Q14646001|Q898923|Q179856',  # beta minus + neutron + alpha decay
+    u'\u03b5\u03b1': 'Q109910|Q179856',     # electron capture + alpha
+    u'\u03b5p': 'Q109910|Q902157',     # electron capture + proton emission
+    u'\u03b52p': 'Q109910|Q9253686',     # electron capture + 2 proton emission
+    u'\u03b53p': 'Q109910|Q21457313',     # electron capture + 3 proton emission
+    u'2\u03b1': 'Q21457421'     # double alpha emission
 }
 
 decay_mode_nucleon_changes = {
@@ -49,7 +62,13 @@ decay_mode_nucleon_changes = {
     'Q520827': [-2, +2],      # double e cap - 2e- + 2p -> 2n
     'Q179856': [-2, -2],      # alpha decay
     'Q898923': [0, -1],       # neutron emission
-    'Q902157': [-1, 0]       # proton emission
+    'Q902157': [-1, 0],       # proton emission
+    'Q9253686': [-2, 0],     # 2-proton emission
+    'Q21457313': [-3, 0],     # 3-proton emission
+    'Q21456752': [0, -2],     # 2-neutron emission
+    'Q21457084': [0, -3],     # 3-neutron emission
+    'Q21457201': [0, -4],     # 4-neutron emission
+    'Q21457421': [-4, -4]     # double alpha decay
 }
 
 
@@ -61,12 +80,21 @@ def nndc_decay_id(decay_mode):
 
 
 def protons_neutrons_after_decay(protons, neutrons, decay_mode_qid):
-    if decay_mode_qid in decay_mode_nucleon_changes:
-        change = decay_mode_nucleon_changes[decay_mode_qid]
-    else: # Unknown (SF can have many products)
+    if decay_mode_qid is None:
         return None
-    protons += change[0]
-    neutrons += change[1]
+
+    qids_to_use = [decay_mode_qid]
+    if '|' in decay_mode_qid:
+        qids_to_use = decay_mode_qid.split('|')
+        
+    for dm_qid in qids_to_use:
+        if dm_qid in decay_mode_nucleon_changes:
+            change = decay_mode_nucleon_changes[dm_qid]
+        else: # Unknown (SF can have many products)
+           return None
+        protons += change[0]
+        neutrons += change[1]
+
     return [protons, neutrons]
 
 # Note uncertainty in NDS style means in last significant digit
