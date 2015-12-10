@@ -97,6 +97,22 @@ def protons_neutrons_after_decay(protons, neutrons, decay_mode_qid):
 
     return [protons, neutrons]
 
+def lowest_increment_of_float_string(fl_string):
+    unc_factor = 1.0
+    if '.' in fl_string:
+        digits = 0
+        expt = 0
+        m2 = re.search(r'\.(\d+)E([-\+]?\d+)$', fl_string)
+        if m2 is None:
+            parts = fl_string.split('.')
+            digits = len(parts[1])
+        else:
+            digits = len(m2.group(1))
+            expt = int(m2.group(2))
+        unc_factor = 10.0 ** (expt - digits)
+    return unc_factor
+
+
 # Note uncertainty in NDS style means in last significant digit
 # eg. 4.623 3 => uncertainty is 0.003 (1-sigma)
 
@@ -126,17 +142,7 @@ def nndc_half_life(protons, neutrons):
             hl_string = m.group(1)
             half_life_unit = m.group(2)
             half_life = float(hl_string)
-            if '.' in hl_string:
-                digits = 0
-                expt = 0
-                m2 = re.search(r'\.(\d+)E([-\+]?\d+)$', hl_string)
-                if m2 is None:
-                    parts = hl_string.split('.')
-                    digits = len(parts[1])
-                else:
-                    digits = len(m2.group(1))
-                    expt = int(m2.group(2))
-                unc_factor = 10.0 ** (expt - digits)
+            unc_factor = lowest_increment_of_float_string(hl_string)
 
     if unc is not None:
         m = re.match(r'^\+([\d\.]+)\-([\d\.]+)$', unc)
@@ -195,3 +201,32 @@ def nndc_decay_modes(protons, neutrons):
     if current_mode is not None:
          decay_modes.append({'mode':current_mode})
     return decay_modes, query_url
+
+def nndc_abundance(protons, neutrons):
+    query = {'z':protons, 'n':neutrons}
+    page = requests.get(nndc_url, params=query)
+    query_url = page.url
+    tree = html.fromstring(page.text)
+
+    abundance_str = None
+    abundance = None
+    uncertainty = None
+
+    nuclide_data_rows = tree.xpath('//tr[@class="cp"]')
+    for row in nuclide_data_rows:
+        entries = row.getchildren()
+    # Note: abundance is 5th column, but only if 6 columns present
+        if len(entries) == 6:
+            level = entries[0].text_content()
+            if (level == '0.0'):
+                abundance_str = entries[4].text
+                if '%' in abundance_str:
+                    abundance_str = re.sub('%\s*$', '', abundance_str)
+                    abundance = float(abundance_str)*0.01 # expressed as %
+                    if len(entries[4].getchildren()) > 0:
+                        uncertainty = 0.01*float(entries[4].getchildren()[0].text)
+    if abundance != None and uncertainty != None:
+        unc_factor = lowest_increment_of_float_string(abundance_str)
+        uncertainty = uncertainty * unc_factor
+
+    return abundance, uncertainty, query_url
