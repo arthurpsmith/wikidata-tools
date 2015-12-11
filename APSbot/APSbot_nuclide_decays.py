@@ -1,5 +1,6 @@
 import pywikibot
 import csv
+import warnings
 from pywikibot.data import api
 
 # Property values from live wikidata:
@@ -66,7 +67,9 @@ def check_or_fix_proportion(claim, pct):
         prop_qual.setTarget(wb_quant)
         claim.addQualifier(prop_qual, bot=True, summary="Adding branching fraction qualifier from NNDC.")
     else: # Modify target value:
-        prop_qual.changeTarget(wb_quant)
+        warnings.warn("proportion has changed!? old value: {}, new value: {}".format(prop_qual.getTarget().amount, fraction))
+# changeTarget is not implemented for qualifiers - would need to remove & add
+#        prop_qual.changeTarget(wb_quant)
     
     return False
 
