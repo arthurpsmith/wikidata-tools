@@ -2,18 +2,14 @@
 #
 import nuclides
 import nndc_data
-import codecs
 import math
 import sys
 
 #
 
-UTF8Writer = codecs.getwriter('utf8')
-sys.stdout = UTF8Writer(sys.stdout)
+nuclide_provider_class = nuclides.SparqlNuclideProvider
 
-nuclide_provider_class = nuclides.WdqNuclideProvider
-
-nuclide_provider = nuclide_provider_class('en')
+nuclide_provider = nuclide_provider_class()
 
 nuclides = nuclide_provider.get_nuclides()
 
@@ -42,5 +38,5 @@ for nuclide in nuclides:
                 decays_to = None
         else:
             decays_to = None
-        print u"{0},{1},{2},{3},{4},{5},{6}".format(nuclide.item_id,
-            mode, mode_qid, pct, decays_to, nuclide.label, source_url)
+        print(u"{0},{1},{2},{3},{4},{5},{6}".format(nuclide.item_id,
+            mode, mode_qid, pct, decays_to, nuclide.label, source_url))

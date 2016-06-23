@@ -22,6 +22,7 @@ time_units_to_qids = {
     'as': 'Q2483628'      # attosecond
 }
 
+
 def nndc_time_id(time_unit):
     qid = None
     if time_unit in time_units_to_qids:
@@ -39,6 +40,7 @@ decay_modes_to_qids = {
     'n': 'Q898923',           # neutron emission
     'p': 'Q902157',           # proton emission
     'SF': 'Q146682',          # spontaneous fission
+    'IT': 'Q1191931',         # isomeric transition
     '2p': 'Q9253686',         # 2-proton decay
     '2n': 'Q21456752',        # 2-neutron decay
     u'\u03b2-n': 'Q14646001|Q898923',  # beta minus + neutron decay
@@ -62,6 +64,7 @@ decay_mode_nucleon_changes = {
     'Q520827': [-2, +2],      # double e cap - 2e- + 2p -> 2n
     'Q179856': [-2, -2],      # alpha decay
     'Q898923': [0, -1],       # neutron emission
+    'Q1191931': [0, 0],       # isomeric transition
     'Q902157': [-1, 0],       # proton emission
     'Q9253686': [-2, 0],     # 2-proton emission
     'Q21457313': [-3, 0],     # 3-proton emission
@@ -90,17 +93,17 @@ def protons_neutrons_after_decay(protons, neutrons, decay_mode_qid):
     for dm_qid in qids_to_use:
         if dm_qid in decay_mode_nucleon_changes:
             change = decay_mode_nucleon_changes[dm_qid]
-        else: # Unknown (SF can have many products)
-           return None
+        else:  # Unknown (SF can have many products)
+            return None
         protons += change[0]
         neutrons += change[1]
 
     return [protons, neutrons]
 
+
 def lowest_increment_of_float_string(fl_string):
     unc_factor = 1.0
     if '.' in fl_string:
-        digits = 0
         expt = 0
         m2 = re.search(r'\.(\d+)E([-\+]?\d+)$', fl_string)
         if m2 is None:
@@ -117,7 +120,7 @@ def lowest_increment_of_float_string(fl_string):
 # eg. 4.623 3 => uncertainty is 0.003 (1-sigma)
 
 def nndc_half_life(protons, neutrons):
-    query = {'z':protons, 'n':neutrons}
+    query = {'z': protons, 'n': neutrons}
     page = requests.get(nndc_url, params=query)
     query_url = page.url
     tree = html.fromstring(page.text)
@@ -130,12 +133,19 @@ def nndc_half_life(protons, neutrons):
     for row in nuclide_data_rows:
         entries = row.getchildren()
         level = entries[0].text_content()
-        if (level == '0.0'):
-            half_life = entries[3].text
-            if len(entries[3].getchildren()) > 0:
-                unc = entries[3].getchildren()[0].text
+        if level == '0.0':
+            half_life, half_life_unit, unc = extract_half_life_from_entries(entries)
 
+    return half_life, half_life_unit, unc, query_url
+
+
+def extract_half_life_from_entries(entries):
+    half_life_unit = None
+    unc = None
     unc_factor = 1.0
+    half_life = entries[3].text
+    if len(entries[3].getchildren()) > 0:
+        unc = entries[3].getchildren()[0].text
     if half_life is not None:
         m = re.search(r'([-\d\.E\+]+)\s+(\S+)\s*$', half_life, re.UNICODE)
         if m is not None:
@@ -157,76 +167,126 @@ def nndc_half_life(protons, neutrons):
         else:
             upper_unc = float(m.group(1))
             lower_unc = float(m.group(2))
-            unc = max(upper_unc, lower_unc) * unc_factor # would be better to show true bounds
-    return half_life, half_life_unit, unc, query_url
+            unc = max(upper_unc, lower_unc) * unc_factor  # would be better to show true bounds
+    return half_life, half_life_unit, unc
 
-# 
 
 def nndc_decay_modes(protons, neutrons):
-    query = {'z':protons, 'n':neutrons}
+    query = {'z': protons, 'n': neutrons}
     page = requests.get(nndc_url, params=query)
     query_url = page.url
     tree = html.fromstring(page.text)
 
     decay_modes = []
 
-    decay_modes_string = None
     nuclide_data_rows = tree.xpath('//tr[@class="cp"]')
     for row in nuclide_data_rows:
         entries = row.getchildren()
         level = entries[0].text_content()
         # Note: decay modes is last column; may be 5th or 6th (if abundance listed)
-        if (level == '0.0'):
-            decay_modes_string = entries[-1].text_content()
+        if level == '0.0':
+            decay_modes = decay_modes_from_text(entries[-1].text_content())
 
+    return decay_modes, query_url
+
+
+def decay_modes_from_text(decay_modes_string):
     if decay_modes_string is None:
-        return [], query_url
-
+        return []
+    decay_modes = []
     decay_modes_parts = decay_modes_string.split(' ')
     current_mode = None
     for part in decay_modes_parts:
         if part == '' or part == '%' or part == ':' or part == '<' or part == '>':
             continue
-        if part == u'\u2264' or part == u'\u2265' or part == u'\u2248': # >= or <= or approx
+        if part == u'\u2264' or part == u'\u2265' or part == u'\u2248':  # >= or <= or approx
             continue
         m = re.match(r'\d+\.?\d*[-E\d]*$', part)
         if m is None:
             if current_mode is not None:
-                decay_modes.append({'mode':current_mode})
+                decay_modes.append({'mode': current_mode})
             current_mode = part
         else:
             pct = float(part)
-            decay_modes.append({'mode':current_mode, 'pct':pct})
+            decay_modes.append({'mode': current_mode, 'pct': pct})
             current_mode = None
     if current_mode is not None:
-         decay_modes.append({'mode':current_mode})
-    return decay_modes, query_url
+        decay_modes.append({'mode': current_mode})
+    return decay_modes
+
 
 def nndc_abundance(protons, neutrons):
-    query = {'z':protons, 'n':neutrons}
+    query = {'z': protons, 'n': neutrons}
     page = requests.get(nndc_url, params=query)
     query_url = page.url
     tree = html.fromstring(page.text)
-
-    abundance_str = None
     abundance = None
     uncertainty = None
 
     nuclide_data_rows = tree.xpath('//tr[@class="cp"]')
     for row in nuclide_data_rows:
         entries = row.getchildren()
-    # Note: abundance is 5th column, but only if 6 columns present
-        if len(entries) == 6:
-            level = entries[0].text_content()
-            if (level == '0.0'):
-                abundance_str = entries[4].text
-                if '%' in abundance_str:
-                    abundance_str = re.sub('%\s*$', '', abundance_str)
-                    abundance = float(abundance_str)*0.01 # expressed as %
-                    if len(entries[4].getchildren()) > 0:
-                        uncertainty = 0.01*float(entries[4].getchildren()[0].text)
-    if abundance != None and uncertainty != None:
-        unc_factor = lowest_increment_of_float_string(abundance_str)
-        uncertainty = uncertainty * unc_factor
-
+        level = entries[0].text_content()
+        if level == '0.0':
+            abundance, uncertainty = extract_abundance_from_entries(entries)
     return abundance, uncertainty, query_url
+
+
+def extract_abundance_from_entries(entries):
+    abundance = None
+    uncertainty = None
+# Note: abundance is 5th column, but only if 6 columns present
+    if len(entries) == 6:
+        abundance_str = entries[4].text
+        if '%' in abundance_str:
+            abundance_str = re.sub('%\s*$', '', abundance_str)
+            abundance = float(abundance_str)*0.01  # expressed as %
+            if len(entries[4].getchildren()) > 0:
+                uncertainty = 0.01*float(entries[4].getchildren()[0].text)
+                unc_factor = lowest_increment_of_float_string(abundance_str)
+                uncertainty *= unc_factor
+
+    return abundance, uncertainty
+
+
+def extract_spin_parity_from_entries(entries):
+    spin = None
+    parity = None
+    spin_party_string = entries[1].text
+    sp_match = re.search(r'([\d/]+)([-+])', spin_party_string)
+    if sp_match is not None:
+        spin = sp_match.group(1)
+        parity = sp_match.group(2) + "1"
+    return spin, parity
+
+
+def all_nuclide_data(protons, neutrons, isomer_index):
+    query = {'z': protons, 'n': neutrons}
+    page = requests.get(nndc_url, params=query)
+    tree = html.fromstring(page.text)
+    nuclide_data_rows = tree.xpath('//tr[@class="cp"]')
+
+    nuclide_data = {}
+    if len(nuclide_data_rows) <= isomer_index:
+        return nuclide_data
+
+    nuclide_data['source_url'] = page.url
+    row = nuclide_data_rows[isomer_index]
+    entries = row.getchildren()
+    level = entries[0].text_content()
+    nuclide_data['level'] = level
+
+    half_life, half_life_unit, half_life_unc = extract_half_life_from_entries(entries)
+    nuclide_data['half_life'] = {'value': half_life, 'unit': half_life_unit, 'uncertainty': half_life_unc}
+
+    abundance, abundance_unc = extract_abundance_from_entries(entries)
+    nuclide_data['abundance'] = {'value': abundance, 'uncertainty': abundance_unc}
+
+    spin, parity = extract_spin_parity_from_entries(entries)
+    nuclide_data['spin'] = spin
+    nuclide_data['parity'] = parity
+
+    # Note: decay modes is last column; may be 5th or 6th (if abundance listed)
+    nuclide_data['decay_modes'] = decay_modes_from_text(entries[-1].text_content())
+
+    return nuclide_data
