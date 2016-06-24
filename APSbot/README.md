@@ -11,7 +11,7 @@ See https://www.mediawiki.org/wiki/Manual:Pywikibot/Installation
 for details.
 
 # APSbot_nuclides.py
-Update wikidata with nuclide information from NNDC (via a CSV file).
+Update wikidata with nuclide half-life information from NNDC (via a CSV file).
 
 To run this (after setting up the bot account etc...)
 
@@ -19,4 +19,11 @@ To run this (after setting up the bot account etc...)
 
 2. python pwb.py APSbot_nuclides.py
 
+# APSbot_nuclide_abundances.py
+Update wikidata with nuclide abundance information from NNDC (via a CSV file).
 
+# APSbot_nuclide_decays.py
+Update wikidata with nuclide decay information from NNDC (via a CSV file).
+
+# APSbot_nuclide_grid.py
+Update wikidata information about organizations from the GRID.ac json dump file.
