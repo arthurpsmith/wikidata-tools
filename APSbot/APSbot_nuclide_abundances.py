@@ -1,16 +1,17 @@
 import pywikibot
 import csv
-from pywikibot.data import api
 
 # Property values from live wikidata:
-p_abundance = 'P2374' # (natural abundance)
+p_abundance = 'P2374'  # (natural abundance)
 p_stated_in = 'P248'
 p_ref_url = 'P854'
 p_retrieved = 'P813'
 p_edition = 'P393'
 nudat_qid = 'Q21234191'
+p_uncertainty_corr = 'P2571'
+standard_dev_qid = 'Q159375'
 
-retrieval_date = pywikibot.WbTime(year=2015, month=12, day=10)
+retrieval_date = pywikibot.WbTime(year=2016, month=6, day=23)
 
 precision = 10 ** -10
 
@@ -18,13 +19,13 @@ site = pywikibot.Site('wikidata', 'wikidata')
 repo = site.data_repository()
 
 
-def get_item(id):
-    item = pywikibot.ItemPage(repo, id)
+def get_item(item_id):
+    item = pywikibot.ItemPage(repo, item_id)
     item.get()
     return item
 
 
-def check_claim_and_uncert(item, property, data):
+def check_claim_and_uncert(item, check_property, data):
     """
     Requires a property, value, uncertainty and returns boolean.
     Returns the claim that fits into the defined precision or None.
@@ -33,8 +34,8 @@ def check_claim_and_uncert(item, property, data):
     value, uncert = data
     value, uncert = float(value), float(uncert)
     try:
-        claims = item_dict['claims'][property]
-    except:
+        claims = item_dict['claims'][check_property]
+    except KeyError:
         return None
 
     try:
@@ -67,11 +68,11 @@ def check_source_set(claim, source_map):
 
     for source in source_claims:
         all_properties_present = True
-        for property in source_map.keys():
-            target_type, source_value = source_map[property]
+        for src_property in source_map.keys():
+            target_type, source_value = source_map[src_property]
             try:
-                sources_with_property = source[property]
-            except:
+                sources_with_property = source[src_property]
+            except KeyError:
                 continue
             found = False
             if target_type == 'item':
@@ -86,22 +87,29 @@ def check_source_set(claim, source_map):
     return False
 
 
-def add_quantity_claim(item, property, data):
+def add_quantity_claim(item, prop, data):
     value, uncert = data
     value, uncert = float(value), float(uncert)
-    claim = pywikibot.Claim(repo, property)
-    wb_quant = pywikibot.WbQuantity(value, error = uncert)
+    claim = pywikibot.Claim(repo, prop)
+    wb_quant = pywikibot.WbQuantity(value, error=uncert)
     claim.setTarget(wb_quant)
     item.addClaim(claim, bot=True, summary="Adding natural abundance claim from NNDC.")
     return claim
 
 
+def add_qualifier(claim, qualifier_property, qualifier_item):
+    qualifier = pywikibot.Claim(repo, qualifier_property)
+    qualifier.setTarget(qualifier_item)
+    claim.addQualifier(qualifier, bot=True)
+    return True
+
+
 def create_source_claim(claim, source_map):
     source_claims = []
-    for property in source_map.keys():
-        target_type, source_value = source_map[property]
-        source_claim = pywikibot.Claim(repo, property, isReference=True)
-        if (target_type == 'item'):
+    for src_prop in source_map.keys():
+        target_type, source_value = source_map[src_prop]
+        source_claim = pywikibot.Claim(repo, src_prop, isReference=True)
+        if target_type == 'item':
             source_page = pywikibot.ItemPage(repo, source_value)
             source_claim.setTarget(source_page)
         else:
@@ -110,7 +118,9 @@ def create_source_claim(claim, source_map):
     claim.addSources(source_claims, bot=True)
     return True
 
+
 def process_nndc_data(filename):
+    standard_dev = pywikibot.ItemPage(repo, standard_dev_qid)
     with open(filename) as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
@@ -119,22 +129,24 @@ def process_nndc_data(filename):
             if uncertainty == 'None':
                 uncertainty = 0.0
             hl_claim = check_claim_and_uncert(nuclide, p_abundance, [abundance, uncertainty])
-            if (hl_claim is None):
+            if hl_claim is None:
                 print('New entry: {0}+-{1} for {2} ({3})'.format(
                     abundance, uncertainty, nuclide_qid, nuclide_name))
                 new_claim = add_quantity_claim(nuclide, p_abundance, [abundance, uncertainty])
+                print('Add uncertainty qualifier')
+                add_qualifier(new_claim, p_uncertainty_corr, standard_dev)
                 source_map = {p_stated_in: ['item', nudat_qid],
-                          p_edition: ['string', '2.6'],
-                          p_ref_url: ['string', nndc_url],
-                          p_retrieved: ['date', retrieval_date]}
+                              p_edition: ['string', '2.6'],
+                              p_ref_url: ['string', nndc_url],
+                              p_retrieved: ['date', retrieval_date]}
                 print('Add source: {0}'.format(nndc_url))
                 create_source_claim(new_claim, source_map)
             else:
                 source_map = {p_stated_in: ['item', nudat_qid],
-                          p_edition: ['string', '2.6'],
-                          p_ref_url: ['string', nndc_url]}
+                              p_edition: ['string', '2.6'],
+                              p_ref_url: ['string', nndc_url]}
                 if not check_source_set(hl_claim, source_map):
                     source_map[p_retrieved] = ['date', retrieval_date]
                     create_source_claim(hl_claim, source_map)
 
-process_nndc_data('test.csv')
+process_nndc_data('abundance_data.csv')
