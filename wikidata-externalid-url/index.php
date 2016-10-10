@@ -113,6 +113,8 @@ print "<li>TA98 - property 1323</li>";
 print "<li>CricketArchive - property 2698</li>";
 print "</ul>";
 
+print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
+
 print "</body></html>";
 
 ?>
