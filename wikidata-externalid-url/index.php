@@ -69,7 +69,11 @@ if (! empty($id) ) {
     break;
   case 2698: // CricketArchive
     if (is_numeric($id)) {
-      $trunc = substr($id, 0, -3) ;
+      if (strlen($id) > 3){
+        $trunc = substr($id, 0, -3) ;
+      } else {
+        $trunc = "0";
+      }
       $link_string = "$trunc/$id/$id";
     } else {
       $link_string = $id;
