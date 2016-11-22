@@ -61,6 +61,9 @@ if (! empty($id) ) {
   case 1323: // TA98
     $link_string = substr($id, 1); // Skip initial letter
     break;
+  case 679: // ZVG number needs to be padded to 6 digits (leading 0's)
+    $link_string = sprintf('%06d', $id);
+    break;
   case 882: // FIPS
     $link_string = substr($id, 0, 2) . "/$id";
     break;
