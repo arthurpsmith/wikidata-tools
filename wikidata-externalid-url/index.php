@@ -1,6 +1,6 @@
 <?PHP
 
-// Copyright 2016 Arthur P. Smith
+// Copyright 2016,2017 Arthur P. Smith
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -22,6 +22,9 @@ $url_suffix = isset($_REQUEST['url_suffix']) ? $_REQUEST['url_suffix'] : '' ;
 $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : '' ;
 
 if (! empty($id) ) {
+ if (strpos($id, '%' !== FALSE)) {
+    $id = urldecode($id);
+ }
  switch($property) {
   case 213: // ISNI
     $link_string = str_replace(" ", "", $id) ;
@@ -102,6 +105,8 @@ print "<li> url_prefix - eg. http://isni.org/</li>";
 print "<li> url_suffix - eg. .html</li>";
 print "<li> id - the id value of this external id property for an entity of interest</li>";
 print "</ul>";
+
+print "Note: this script also URL-decodes the id value so that an id with several embedded parameters can be used as originally intended.";
 
 print "<p>An example: <a href=\"http://tools.wmflabs.org/wikidata-externalid-url/?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315\">http://tools.wmflabs.org/wikidata-externalid-url/?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315</a>.</p>";
 
