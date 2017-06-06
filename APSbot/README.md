@@ -3,7 +3,7 @@ Bot account to query and update wikidata...
 
 Tested with python 3.4
 
-The bot code runs in a cloned copy of pywikibot:
+Most of the bot code runs in a cloned copy of pywikibot:
 
 git clone --recursive https://gerrit.wikimedia.org/r/pywikibot/core.git
 
@@ -25,5 +25,8 @@ Update wikidata with nuclide abundance information from NNDC (via a CSV file).
 # APSbot_nuclide_decays.py
 Update wikidata with nuclide decay information from NNDC (via a CSV file).
 
-# APSbot_nuclide_grid.py
+# APSbot_grid.py
 Update wikidata information about organizations from the GRID.ac json dump file.
+
+# APSbot_grid_create.py
+Create wikidata items about organizations from the GRID.ac json dump file, parsed into a CSV format for processing.
