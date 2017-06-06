@@ -7,10 +7,10 @@ p_doi = 'P356'
 p_edition = 'P393'
 p_ref_url = 'P854'
 
-retrieval_date = pywikibot.WbTime(year=2016, month=5, day=31)
-source_doi = '10.6084/m9.figshare.3409414'
-reference_url = 'https://figshare.com/articles/GRID_release_2016-05-31/3409414'
-edition = '2016-05-31'
+retrieval_date = pywikibot.WbTime(year=2016, month=12, day=8)
+source_doi = '10.6084/m9.figshare.4290998'
+reference_url = 'https://figshare.com/articles/GRID_release_2016-12-06/4290998'
+edition = '2016-12-06'
 
 site = pywikibot.Site('wikidata', 'wikidata')
 repo = site.data_repository()
@@ -91,7 +91,11 @@ def process_grid_data(filename):
     with open(filename) as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            grid_id, org_qid, org_name = row
+#            grid_id, org_qid, org_name = row
+# temporary:
+            org_name, grid_id, org_qid = row
+            if org_qid is None:
+                continue
             organization = get_item(org_qid)
             grid_claim = check_claim(organization, p_grid_id, grid_id)
             if grid_claim is None:
