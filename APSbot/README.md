@@ -29,4 +29,4 @@ Update wikidata with nuclide decay information from NNDC (via a CSV file).
 Update wikidata information about organizations from the GRID.ac json dump file.
 
 # APSbot_grid_create.py
-Create wikidata items about organizations from the GRID.ac json dump file, parsed into a CSV format for processing.
+Create wikidata items about organizations from the GRID.ac json dump file, parsed into a CSV format for processing. This script uses WikidataIntegrator instead of pywikibot, so can be run directly ('python APSbot_grid_create.py').
