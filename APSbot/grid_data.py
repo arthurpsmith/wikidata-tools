@@ -19,6 +19,11 @@ class GridData:
             grid_id = i['grid']['value']
             self.grid_wikidata_links[grid_id] = qid
 
+    def verify_not_in_wikidata(self, grid_id):
+        results = wdi_core.WDItemEngine.execute_sparql_query(
+                query="SELECT ?item ?grid WHERE {{ ?item wdt:P2427 '{0}' . }}".format(grid_id))
+        return len(results['results']['bindings']) == 0
+
     def load_country_map(self, country_map_file):
         self.country_map = {}
         with open(country_map_file) as csvfile:
@@ -53,19 +58,20 @@ class GridData:
         org = self.grid_lookup_hash[grid_id]
         org_name = org['name']
         org_inception = org['established']
-        org_type_qid = None
         website = None
         latitude = None
         longitude = None
         city = None
         country = None
+        org_type_label = 'Other' # default
+        org_type_qid = self.org_types_map[org_type_label]
         if org['types']:
             for type_label in org['types']:
                 org_type_label = type_label
                 org_type_qid = self.org_types_map[type_label]
         if org['links']:
             for link_url in org['links']:
-                website = link_url
+                website = link_url.strip() # remove any extraneous spaces
         if org['addresses']:
             for org_address in org['addresses']:
                 latitude = org_address['lat']

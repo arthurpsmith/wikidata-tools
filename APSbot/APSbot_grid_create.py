@@ -1,3 +1,4 @@
+import sys
 from wikidataintegrator import wdi_core, wdi_login
 import json
 import datetime
@@ -64,7 +65,7 @@ def create_grid_item(grid_data, grid_id, grid_release_item_id, login_instance):
     statements.append(wdi_core.WDExternalID(grid_id, p_grid_id, references=[reference_info]))
     if org_country_qid:
         statements.append(wdi_core.WDItemID(org_country_qid, p_country, references=[reference_info]))
-    if website:
+    if website and (len(website) < 500):
         statements.append(wdi_core.WDUrl(website, p_official_website, references=[reference_info]))
     if org_inception and (int(org_inception) > 900):
         org_inception_date = datetime.date(int(org_inception), 1, 1)
@@ -88,13 +89,19 @@ def create_grid_item(grid_data, grid_id, grid_release_item_id, login_instance):
             wd_item.set_aliases([label_hash['label']], 'en', append=True)
         else:
             wd_item.set_label(label=label_hash['label'], lang=label_hash['language'])
-    new_item_id = wd_item.write(login_instance)
+    new_item_id = wd_item.write(login_instance, edit_summary='Creating item from GRID record via APSbot_grid_create script (APSbot task 3)')
     print("created {0}".format(new_item_id))
 
 entered_count = 0
-max_entry = 5
+min_entry = 1
+max_entry = 45000
 for grid_id in grid_data.valid_ids_not_in_wikidata():
-    create_grid_item(grid_data, grid_id, grid_release_item_id, login_instance)
     entered_count += 1
+    if entered_count < min_entry:
+        continue
+    try:
+        create_grid_item(grid_data, grid_id, grid_release_item_id, login_instance)
+    except:
+        print("Error creating GRID item for {0}: {1}", grid_id, sys.exc_info()[0])
     if entered_count >= max_entry:
         break
