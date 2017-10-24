@@ -46,6 +46,9 @@ if (! empty($id) ) {
       case 'co':
         $link_string = "company/$id/";
         break;
+      case 'ni':
+        $link_string = "news/$id/";
+        break;
       default:
         $link_string = "/$id" ;
         break;
