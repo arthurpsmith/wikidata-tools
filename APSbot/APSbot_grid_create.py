@@ -47,7 +47,7 @@ grid_data.load_country_map('country_map.csv')
 grid_data.load_type_map('type_map.csv')
 
 def create_grid_item(grid_data, grid_id, grid_release_item_id, login_instance):
-    reference_info = [wdi_core.WDItemID(grid_release_item_id, 'P248', is_reference=True)]
+    reference_info = [wdi_core.WDItemID(grid_release_item_id, 'P248', is_reference=True), wdi_core.WDExternalID(grid_id, p_grid_id, is_reference=True)]
     base_data = grid_data.base_data_for_id(grid_id)
     org_name = base_data['label']
     org_description = base_data['description']
@@ -71,7 +71,7 @@ def create_grid_item(grid_data, grid_id, grid_release_item_id, login_instance):
         org_inception_date = datetime.date(int(org_inception), 1, 1)
         statements.append(wdi_core.WDTime(org_inception_date.strftime('+%Y-%m-%dT%H:%M:%SZ'), p_inception, precision=9,
                                           references=[reference_info])) # year-level precision in inception dates from GRID
-    if latitude and longitude:
+    if latitude and longitude and (abs(latitude) <= 90.0) and (abs(longitude) <= 360.0):
         precision = 1.0
         longitude_parts = str(longitude).split('.')
         if len(longitude_parts) > 1:
@@ -94,14 +94,19 @@ def create_grid_item(grid_data, grid_id, grid_release_item_id, login_instance):
 
 entered_count = 0
 min_entry = 1
-max_entry = 45000
+max_entry = 40000
 for grid_id in grid_data.valid_ids_not_in_wikidata():
     entered_count += 1
+    print("{0} - {1}".format(entered_count, grid_id))
     if entered_count < min_entry:
         continue
     try:
         create_grid_item(grid_data, grid_id, grid_release_item_id, login_instance)
+    except wdi_core.WDApiError as wd_error:
+        print("Error creating GRID item for {0}: {1} - {2}".format(grid_id, sys.exc_info()[0], wd_error.wd_error_msg))
+    except KeyError as key_error:
+        print("Error creating GRID item for {0}: {1} - {2}".format(grid_id, sys.exc_info()[0], str(key_error)))
     except:
-        print("Error creating GRID item for {0}: {1}", grid_id, sys.exc_info()[0])
+        print("Error creating GRID item for {0}: {1}".format(grid_id, sys.exc_info()[0]))
     if entered_count >= max_entry:
         break
