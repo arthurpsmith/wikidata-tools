@@ -6,12 +6,13 @@ wikidataintegrator.wdi_property_store.valid_instances['organizations'] = [
     'Q43229'
 ]
 
-# Supplement wdi's list of core properties:
+# Supplement wdi's list of properties:
+#
 wikidataintegrator.wdi_property_store.wd_properties['P2427'] = {
     'datatype': 'string',
     'name': 'GRID ID',
     'domain': ['organizations'],
-    'core_id': 'True'
+    'core_id': True
 }
 
 class MyRelease(wdi_helpers.Release):
