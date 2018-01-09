@@ -88,6 +88,11 @@ if (! empty($id) ) {
       $link_string = $id;
     }
     break;
+  case 3608: // EU VAT number
+    $member_state_code = substr($id, 0, 2);
+    $vat_digits = substr($id, 2);
+    $link_string = "$member_state_code&number=$vat_digits";
+    break;
   case 4033: // Mastodon address
     $mastodon_parts = split("@", $id);
     $m_user = $mastodon_parts[0];
@@ -128,6 +133,8 @@ print "<li>E number - property 628</li>";
 print "<li>SOC code - property 919</li>";
 print "<li>TA98 - property 1323</li>";
 print "<li>CricketArchive - property 2698</li>";
+print "<li>EU VAT number - property 3608</li>";
+print "<li>Mastodon - property 4033</li>";
 print "</ul>";
 
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
