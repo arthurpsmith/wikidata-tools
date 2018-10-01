@@ -37,8 +37,9 @@ if (! empty($id) ) {
       case 'tt':
         $link_string = "title/$id/";
         break;
-      case 'ch':
+      case 'ch': # Note - updated October 2018 to redirect to archive.org
         $link_string = "character/$id/";
+        $url_prefix = "https://web.archive.org/web/https://www.imdb.com/";
         break;
       case 'ev':
         $link_string = "event/$id";
@@ -99,6 +100,13 @@ if (! empty($id) ) {
     $m_host = $mastodon_parts[1];
     $link_string = "http://$m_host/@$m_user";
     break;
+  case 5892: // UOL Brazil election id
+    $uol_parts = split("/", $id);
+    $uol_year = $uol_parts[0];
+    $uol_first_code = $uol_parts[1];
+    $uol_second_code = $uol_parts[2];
+    $link_string = "ano-eleicao=$uol_year&dados-cargo-disputado-id=$uol_first_code&dados-uf-eleicao=$uol_second_code";
+    break;
   default:
     $link_string = $id ;
     break ;
@@ -135,6 +143,7 @@ print "<li>TA98 - property 1323</li>";
 print "<li>CricketArchive - property 2698</li>";
 print "<li>EU VAT number - property 3608</li>";
 print "<li>Mastodon - property 4033</li>";
+print "<li>UOL Brazil election id - property 5892</li>";
 print "</ul>";
 
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
