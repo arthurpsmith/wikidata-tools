@@ -107,6 +107,9 @@ if (! empty($id) ) {
     $uol_second_code = $uol_parts[2];
     $link_string = "ano-eleicao=$uol_year&dados-cargo-disputado-id=$uol_first_code&dados-uf-eleicao=$uol_second_code";
     break;
+  case 6371: // Archives of Maryland Biographical Series ID
+    $first_digits = substr($id, 3);
+    $link_string = "0" . $first_digits . "00/0$id/html/msa$id.html" ;
   default:
     $link_string = $id ;
     break ;
