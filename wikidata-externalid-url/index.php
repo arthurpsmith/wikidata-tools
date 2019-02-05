@@ -111,6 +111,9 @@ if (! empty($id) ) {
     $first_digits = substr($id, 0, 3);
     $link_string = "0" . $first_digits . "00/0$id/html/msa$id.html" ;
     break;
+  case 6460: // Swedish Organization Number
+    $link_string = str_replace("-", "", $id) ;
+    break;
   default:
     $link_string = $id ;
     break ;
@@ -148,6 +151,7 @@ print "<li>CricketArchive - property 2698</li>";
 print "<li>EU VAT number - property 3608</li>";
 print "<li>Mastodon - property 4033</li>";
 print "<li>UOL Brazil election id - property 5892</li>";
+print "<li>Swedish Organization Number - property 6460</li>";
 print "</ul>";
 
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
