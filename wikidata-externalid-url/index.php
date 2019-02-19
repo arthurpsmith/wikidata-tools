@@ -105,7 +105,8 @@ if (! empty($id) ) {
     $uol_year = $uol_parts[0];
     $uol_first_code = $uol_parts[1];
     $uol_second_code = $uol_parts[2];
-    $link_string = "ano-eleicao=$uol_year&dados-cargo-disputado-id=$uol_first_code&dados-uf-eleicao=$uol_second_code";
+    $uol_third_code = $uol_parts[3];
+    $link_string = "ano-eleicao=$uol_year&dados-cargo-disputado-id=$uol_first_code&dados-uf-eleicao=$uol_second_code&dados-municipio-ibge-id=$uol_third_code";
     break;
   case 6371: // Archives of Maryland Biographical Series ID
     $first_digits = substr($id, 0, 3);
