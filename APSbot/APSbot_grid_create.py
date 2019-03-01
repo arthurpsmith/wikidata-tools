@@ -1,9 +1,11 @@
 import sys
+import traceback
 from wikidataintegrator import wdi_core, wdi_login
 import json
 import datetime
 import wdi_extension
 import grid_data
+from time import sleep
 
 # Property values from live wikidata:
 p_grid_id = 'P2427'
@@ -18,7 +20,7 @@ passwd = None
 with open('apsbot.pwd') as passwdfile:
     passwd = passwdfile.read().strip()
 
-login_instance = wdi_login.WDLogin(user='APSbot', pwd=passwd)
+login_instance = wdi_login.WDLogin(user='APSbot@APSbot', pwd=passwd)
 
 release_date = None
 release_url = None
@@ -79,7 +81,7 @@ def create_grid_item(grid_data, grid_id, grid_release_item_id, login_instance):
             precision = pow(10.0, -exp)
         statements.append(wdi_core.WDGlobeCoordinate(float(latitude), float(longitude), precision,
                                                      p_coordinate_location, references=[reference_info]))
-    wd_item = wdi_core.WDItemEngine(item_name=org_name,domain="organizations",data=statements)
+    wd_item = wdi_core.WDItemEngine(data=statements)
     wd_item.set_label(label=org_name,lang='en')
     wd_item.set_description(description=org_description,lang='en')
     if org_aliases and len(org_aliases) > 0:
@@ -93,9 +95,10 @@ def create_grid_item(grid_data, grid_id, grid_release_item_id, login_instance):
     print("created {0}".format(new_item_id))
 
 entered_count = 0
-min_entry = 1
+min_entry = 0
 max_entry = 40000
 for grid_id in grid_data.valid_ids_not_in_wikidata():
+    sleep(2.0) # crude throttle...
     entered_count += 1
     print("{0} - {1}".format(entered_count, grid_id))
     if entered_count < min_entry:
@@ -104,9 +107,12 @@ for grid_id in grid_data.valid_ids_not_in_wikidata():
         create_grid_item(grid_data, grid_id, grid_release_item_id, login_instance)
     except wdi_core.WDApiError as wd_error:
         print("Error creating GRID item for {0}: {1} - {2}".format(grid_id, sys.exc_info()[0], wd_error.wd_error_msg))
+        traceback.print_exc()
     except KeyError as key_error:
         print("Error creating GRID item for {0}: {1} - {2}".format(grid_id, sys.exc_info()[0], str(key_error)))
+        traceback.print_exc()
     except:
         print("Error creating GRID item for {0}: {1}".format(grid_id, sys.exc_info()[0]))
+        traceback.print_exc()
     if entered_count >= max_entry:
         break

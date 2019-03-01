@@ -1,20 +1,6 @@
 import wikidataintegrator
 from wikidataintegrator import wdi_core, wdi_helpers
 
-# Supplement wdi types
-wikidataintegrator.wdi_property_store.valid_instances['organizations'] = [
-    'Q43229'
-]
-
-# Supplement wdi's list of properties:
-#
-wikidataintegrator.wdi_property_store.wd_properties['P2427'] = {
-    'datatype': 'string',
-    'name': 'GRID ID',
-    'domain': ['organizations'],
-    'core_id': True
-}
-
 class MyRelease(wdi_helpers.Release):
     def __init__(self, title, description, edition, edition_of=None, edition_of_wdid=None, archive_url=None,
                  pub_date=None, date_precision=11, url=None, doi=None):
@@ -40,14 +26,14 @@ class MyRelease(wdi_helpers.Release):
         :param doi: (optional) DOI for the release
         :type doi: str
         """
-        super().__init__(title, description, edition, edition_of, edition_of_wdid, archive_url,
+        super().__init__(title, description, edition, edition_of_wdid, archive_url,
                          pub_date, date_precision)
         self.url = url
         self.doi = doi
-        self.add_extra_statements()
 
 
-    def add_extra_statements(self):
+    def make_statements(self):
+        super().make_statements()
         if self.url:
             is_download_url = wdi_core.WDItemID('Q7126717', 'P642', is_qualifier=True)
             self.statements.append(wdi_core.WDUrl(self.url, 'P2699', qualifiers=[is_download_url]))
