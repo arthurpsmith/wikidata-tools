@@ -115,6 +115,12 @@ if (! empty($id) ) {
   case 6460: // Swedish Organization Number
     $link_string = str_replace("-", "", $id) ;
     break;
+  case 6623: // Gamepedia article ID
+    $gp_parts = split(":", $id);
+    $wiki = $gp_parts[0];
+    $page = $gp_parts[1];
+    $link_string = "https://$wiki.gamepedia.com/$page";
+    break;
   default:
     $link_string = $id ;
     break ;
@@ -153,6 +159,7 @@ print "<li>EU VAT number - property 3608</li>";
 print "<li>Mastodon - property 4033</li>";
 print "<li>UOL Brazil election id - property 5892</li>";
 print "<li>Swedish Organization Number - property 6460</li>";
+print "<li>Gamepedia article ID - property 6623</li>";
 print "</ul>";
 
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
