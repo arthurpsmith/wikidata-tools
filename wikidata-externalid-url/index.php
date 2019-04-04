@@ -115,6 +115,10 @@ if (! empty($id) ) {
   case 6460: // Swedish Organization Number
     $link_string = str_replace("-", "", $id) ;
     break;
+  case 6623: // Gamepedia article ID
+    list($wiki, $page) = explode($id, ":", 1);
+    $link_string = "https://$wiki.gamepedia.com/$page";
+    break;
   default:
     $link_string = $id ;
     break ;
