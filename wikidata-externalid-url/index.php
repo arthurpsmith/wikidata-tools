@@ -80,9 +80,9 @@ if (! empty($id) ) {
   case 1209: // CN
     if (substr($id, 3, 1)==="0") { # for newspapers
         $newspaper_id = str_replace("-", "", $id);
-        $link_string = "http://www.sapprft.gov.cn/zongshu/view.shtml?typeNum=1&pubCode=$newspaper_id";
+        $link_string = "typeNum=1&pubCode=$newspaper_id";
     } else { # for magazines
-        $link_string = "http://www.sapprft.gov.cn/zongshu/view.shtml?typeNum=2&pubCode=$id";
+        $link_string = "typeNum=2&pubCode=$id";
     }
     break;
   case 2698: // CricketArchive
