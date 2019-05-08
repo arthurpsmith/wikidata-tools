@@ -65,14 +65,6 @@ if (! empty($id) ) {
     }
     break;
   case 628: // E number
-  case 1209: // CN
-    if (substr($id, 3, 1)==="0") { # for newspapers
-        $newspaper_id = str_replace("-", "", $id);
-        $link_string = "http://www.sapprft.gov.cn/zongshu/view.shtml?typeNum=1&pubCode=$newspaper_id";
-    } else { # for magazines
-        $link_string = "http://www.sapprft.gov.cn/zongshu/view.shtml?typeNum=2&pubCode=$id";
-    }
-    break;
   case 1323: // TA98
     $link_string = substr($id, 1); // Skip initial letter
     break;
@@ -84,6 +76,14 @@ if (! empty($id) ) {
     break;
   case 919: // SOC code
     $link_string = str_replace("-", "", $id) ;
+    break;
+  case 1209: // CN
+    if (substr($id, 3, 1)==="0") { # for newspapers
+        $newspaper_id = str_replace("-", "", $id);
+        $link_string = "http://www.sapprft.gov.cn/zongshu/view.shtml?typeNum=1&pubCode=$newspaper_id";
+    } else { # for magazines
+        $link_string = "http://www.sapprft.gov.cn/zongshu/view.shtml?typeNum=2&pubCode=$id";
+    }
     break;
   case 2698: // CricketArchive
     if (is_numeric($id)) {
