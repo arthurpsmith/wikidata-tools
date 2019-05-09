@@ -77,6 +77,14 @@ if (! empty($id) ) {
   case 919: // SOC code
     $link_string = str_replace("-", "", $id) ;
     break;
+  case 1209: // CN
+    if (substr($id, 3, 1)==="0") { # for newspapers
+        $newspaper_id = str_replace("-", "", $id);
+        $link_string = "typeNum=1&pubCode=$newspaper_id";
+    } else { # for magazines
+        $link_string = "typeNum=2&pubCode=$id";
+    }
+    break;
   case 2698: // CricketArchive
     if (is_numeric($id)) {
       if (strlen($id) > 3){
@@ -153,6 +161,7 @@ print "<li>IMDB - property 345</li>";
 print "<li>HURDAT - property 502</li>";
 print "<li>E number - property 628</li>";
 print "<li>SOC code - property 919</li>";
+print "<li>CN - property 1209</li>";
 print "<li>TA98 - property 1323</li>";
 print "<li>CricketArchive - property 2698</li>";
 print "<li>EU VAT number - property 3608</li>";
