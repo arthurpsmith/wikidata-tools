@@ -129,6 +129,12 @@ if (! empty($id) ) {
     $page = $gp_parts[1];
     $link_string = "https://$wiki.gamepedia.com/$page";
     break;
+  case 6841: // ITF tournament ID
+    $itf_parts = split(":", $id);
+    $sex = $itf_parts[0];
+    $id = $itf_parts[1];
+    $link_string = "https://www.itftennis.com/procircuit/tournaments/$sex's-tournament/info.aspx?tournamentid=$id";
+    break;
   default:
     $link_string = $id ;
     break ;
