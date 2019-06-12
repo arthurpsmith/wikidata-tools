@@ -175,6 +175,7 @@ print "<li>Mastodon - property 4033</li>";
 print "<li>UOL Brazil election id - property 5892</li>";
 print "<li>Swedish Organization Number - property 6460</li>";
 print "<li>Gamepedia article ID - property 6623</li>";
+print "<li>ITF tournament ID - property 6841</li>";
 print "</ul>";
 
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
