@@ -1,10 +1,10 @@
-<?PHP
+<?php
 
 // Copyright 2016,2017 Arthur P. Smith
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
@@ -26,9 +26,6 @@ if (! empty($id) ) {
     $id = urldecode($id);
  }
  switch($property) {
-  case 213: // ISNI
-    $link_string = str_replace(" ", "", $id) ;
-    break ;
   case 345: // IMDB
     switch(substr($id, 0, 2)) {
       case 'nm':
@@ -150,19 +147,18 @@ print "<html><head><title>Wikidata External ID redirector</title></head>" ;
 print "<body><h1>Wikidata External ID redirector</h1>" ;
 print "This accepts the following '?' parameters and returns a redirect constructed from them:" ;
 print "<ul>" ;
-print "<li> p - property number (eg. 213 = ISNI)</li>";
-print "<li> url_prefix - eg. http://isni.org/</li>";
+print "<li> p - property number (eg. 345 = IMDB)</li>";
+print "<li> url_prefix - eg. https://www.imdb.com/</li>";
 print "<li> url_suffix - eg. .html</li>";
 print "<li> id - the id value of this external id property for an entity of interest</li>";
 print "</ul>";
 
 print "Note: this script also URL-decodes the id value so that an id with several embedded parameters can be used as originally intended.";
 
-print "<p>An example: <a href=\"http://tools.wmflabs.org/wikidata-externalid-url/?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315\">http://tools.wmflabs.org/wikidata-externalid-url/?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315</a>.</p>";
+print "<p>An example: <a href=\"https://tools.wmflabs.org/wikidata-externalid-url/?p=345&url_prefix=https://www.imdb.com/&id=tt0068646\">https://tools.wmflabs.org/wikidata-externalid-url/?p=345&url_prefix=https://www.imdb.com/&id=tt0068646</a>.</p>";
 
 print "<p>Currently supported id translations:</p>";
 print "<ul>";
-print "<li>ISNI - property 213</li>";
 print "<li>IMDB - property 345</li>";
 print "<li>HURDAT - property 502</li>";
 print "<li>E number - property 628</li>";
@@ -180,5 +176,3 @@ print "</ul>";
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
 
 print "</body></html>";
-
-?>
