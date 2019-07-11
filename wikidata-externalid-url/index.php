@@ -135,6 +135,19 @@ if (! empty($id) ) {
     $id = $itf_parts[1];
     $link_string = "https://www.itftennis.com/procircuit/tournaments/$sex's-tournament/info.aspx?tournamentid=$id";
     break;
+  case 6996: // Epitafier.se ID
+    switch(substr($id, 0, 1)) {
+      case 'B':
+        $link_string = "http://www.epitafier.se/?page=begravningsvapen&subj=$id";
+        break;
+      case 'E':
+        $link_string = "http://www.epitafier.se/?page=epitafier&subj=$id";
+        break;
+      default:
+        $link_string = "http://www.epitafier.se/?page=begravningsvapen&subj=$id" ;
+        break;
+    }
+    break;
   default:
     $link_string = $id ;
     break ;
@@ -175,6 +188,7 @@ print "<li>Mastodon - property 4033</li>";
 print "<li>UOL Brazil election id - property 5892</li>";
 print "<li>Swedish Organization Number - property 6460</li>";
 print "<li>Gamepedia article ID - property 6623</li>";
+print "<li>Epitafier.se ID - property 6996</li>";
 print "</ul>";
 
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
