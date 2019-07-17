@@ -188,6 +188,7 @@ print "<li>Mastodon - property 4033</li>";
 print "<li>UOL Brazil election id - property 5892</li>";
 print "<li>Swedish Organization Number - property 6460</li>";
 print "<li>Gamepedia article ID - property 6623</li>";
+print "<li>ITF tournament ID - property 6841</li>";
 print "<li>Epitafier.se ID - property 6996</li>";
 print "</ul>";
 
