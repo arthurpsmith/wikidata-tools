@@ -148,6 +148,16 @@ if (! empty($id) ) {
         break;
     }
     break;
+  case 1695: // NLP ID
+    switch(substr($id, 0, 1)) {
+      case 'A':
+        $link_string = "http://mak.bn.org.pl/cgi-bin/KHW/makwww.exe?BM=1&NU=1&IM=5&WI=$id" ;
+        break;
+      case '9':
+        $link_string = "http://mak.bn.org.pl/cgi-bin/KHW/makwww.exe?BM=1&NU=1&IM=4&WI=$id" ;
+        break;
+    }
+    break;
   default:
     $link_string = $id ;
     break ;
@@ -190,6 +200,7 @@ print "<li>Swedish Organization Number - property 6460</li>";
 print "<li>Gamepedia article ID - property 6623</li>";
 print "<li>ITF tournament ID - property 6841</li>";
 print "<li>Epitafier.se ID - property 6996</li>";
+print "<li>NLP ID - property 1695</li>";
 print "</ul>";
 
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
