@@ -1,5 +1,4 @@
 <?PHP
-
 // Copyright 2016,2017 Arthur P. Smith
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -97,6 +96,11 @@ if (! empty($id) ) {
       $link_string = $id;
     }
     break;
+  case 3563: // NGA Lighthouse ID
+    preg_match('/(?:(11[0-6])\D+)?(\d+\.?\d*)/', $id, $a);
+    $link_string = "https://msi.nga.mil/queryResults?publications/ngalol/lights-buoys?volume=".$a[1]."&featureNumber=".$a[2]."&includeRemovals=false&output=html";
+    break;
+    
   case 3608: // EU VAT number
     $member_state_code = substr($id, 0, 2);
     $vat_digits = substr($id, 2);
@@ -193,6 +197,7 @@ print "<li>SOC code - property 919</li>";
 print "<li>CN - property 1209</li>";
 print "<li>TA98 - property 1323</li>";
 print "<li>CricketArchive - property 2698</li>";
+print "<li>NGA Lighthouse ID - property 3563</li>";
 print "<li>EU VAT number - property 3608</li>";
 print "<li>Mastodon - property 4033</li>";
 print "<li>UOL Brazil election id - property 5892</li>";
