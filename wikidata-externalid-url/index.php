@@ -103,9 +103,10 @@ if (! empty($id) ) {
     $link_string = "$member_state_code&number=$vat_digits";
     break;
   case 4033: // Mastodon address
-    $mastodon_parts = split("@", $id);
-    $m_user = $mastodon_parts[0];
-    $m_host = $mastodon_parts[1];
+    $mastodon_parts = array();
+    preg_match('/@?([^@]+)@(.*)/', $id, $mastodon_parts);
+    $m_user = $mastodon_parts[1];
+    $m_host = $mastodon_parts[2];
     $link_string = "http://$m_host/@$m_user";
     break;
   case 5892: // UOL Brazil election id
