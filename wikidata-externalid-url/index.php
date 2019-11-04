@@ -18,12 +18,11 @@
 $property = isset($_REQUEST['p']) ? $_REQUEST['p'] : '' ;
 $url_prefix = isset($_REQUEST['url_prefix']) ? $_REQUEST['url_prefix'] : '' ;
 $url_suffix = isset($_REQUEST['url_suffix']) ? $_REQUEST['url_suffix'] : '' ;
-$id = isset($_REQUEST['id']) ? $_REQUEST['id'] : '' ;
+$url = rawurldecode(isset($_REQUEST['url']) ? $_REQUEST['url'] : '') ;
+$exp = rawurldecode(isset($_REQUEST['exp']) ? $_REQUEST['exp'] : '');
+$id = rawurldecode(isset($_REQUEST['id']) ? $_REQUEST['id'] : '') ;
 
 if (! empty($id) ) {
- if (strpos($id, '%' !== FALSE)) {
-    $id = urldecode($id);
- }
  switch($property) {
   case 213: // ISNI
     $link_string = str_replace(" ", "", $id) ;
@@ -96,11 +95,6 @@ if (! empty($id) ) {
       $link_string = $id;
     }
     break;
-  case 3563: // NGA Lighthouse ID
-    preg_match('/(?:(11[0-6])\D+)?(\d+\.?\d*)/', $id, $a);
-    $link_string = "https://msi.nga.mil/queryResults?publications/ngalol/lights-buoys?volume=".$a[1]."&featureNumber=".$a[2]."&includeRemovals=false&output=html";
-    break;
-    
   case 3608: // EU VAT number
     $member_state_code = substr($id, 0, 2);
     $vat_digits = substr($id, 2);
@@ -163,17 +157,27 @@ if (! empty($id) ) {
     }
     break;
   default:
-    $link_string = $id ;
+    if (! empty($exp) ) {
+      preg_match('/'.$exp.'/', $id, $a);
+      for($i=0; $i<sizeof($a); $i++) {
+        $url = str_replace("%".$i, $a[$i], $url);
+      }
+      $link_string = $url;
+    }
+    else
+      $link_string = $id ;
+    break;
+    
+
     break ;
  }
 
  $redirect_url = $url_prefix . $link_string . $url_suffix ;
-
  header("Location: $redirect_url");
  exit();
 }
 
-print "<html><head><title>Wikidata External ID redirector</title></head>" ;
+print "<html><head><meta charset='utf-8'><title>Wikidata External ID redirector</title></head>" ;
 print "<body><h1>Wikidata External ID redirector</h1>" ;
 print "This accepts the following '?' parameters and returns a redirect constructed from them:" ;
 print "<ul>" ;
@@ -183,9 +187,24 @@ print "<li> url_suffix - eg. .html</li>";
 print "<li> id - the id value of this external id property for an entity of interest</li>";
 print "</ul>";
 
+$url   = "http://test.org/?vol=%1&item=%2";
+$id    = "113-1250";
+$exp = "(.*)-(.*)";
+
+print "This accepts the alternative '?' parameters:" ;
+print "<ul>" ;
+print "<li> url - url with parameters %1, %2... eg. <i>".$url."</i></li>";
+print "<li> exp - regular expression eg. <i>".$exp."</i></li>";
+print "<li> id - eg. <i>".$id."</i></li>";
+$p = "?url=".urlencode($url)."&exp=".urlencode($exp)."&id=".urlencode($id);
+print "<li> example <a href='index.php".$p."'>http://tools.wmflabs.org/wikidata-externalid-url/".$p."</a></li>";
+$r = "http://test.org/?vol=113?item=1250";
+print "<li> result  <a href='".$r."'>".$r."</a></li>";
+print "</ul>";
+print "Note: all parameters should be url encoded.<br/>";
 print "Note: this script also URL-decodes the id value so that an id with several embedded parameters can be used as originally intended.";
 
-print "<p>An example: <a href=\"http://tools.wmflabs.org/wikidata-externalid-url/?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315\">http://tools.wmflabs.org/wikidata-externalid-url/?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315</a>.</p>";
+print "<p>An example: <a href=\"index.php?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315\">http://tools.wmflabs.org/wikidata-externalid-url/?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315</a>.</p>";
 
 print "<p>Currently supported id translations:</p>";
 print "<ul>";
@@ -197,7 +216,6 @@ print "<li>SOC code - property 919</li>";
 print "<li>CN - property 1209</li>";
 print "<li>TA98 - property 1323</li>";
 print "<li>CricketArchive - property 2698</li>";
-print "<li>NGA Lighthouse ID - property 3563</li>";
 print "<li>EU VAT number - property 3608</li>";
 print "<li>Mastodon - property 4033</li>";
 print "<li>UOL Brazil election id - property 5892</li>";
