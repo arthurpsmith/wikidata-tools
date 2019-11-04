@@ -100,6 +100,10 @@ if (! empty($id) ) {
     $vat_digits = substr($id, 2);
     $link_string = "$member_state_code&number=$vat_digits";
     break;
+  case 3723: // USCG Lighthouse ID
+    preg_match('/(\d+)-(\d+(?:.\d*)?)/', $id, $a);
+    $link_string = "https://msi.nga.mil/queryResults?publications/uscgll?volume=".$a[1]."&featureNumber=".$a[2]."&includeRemovals=false&output=html";
+    break;    
   case 4033: // Mastodon address
     $mastodon_parts = split("@", $id);
     $m_user = $mastodon_parts[0];
@@ -217,6 +221,7 @@ print "<li>CN - property 1209</li>";
 print "<li>TA98 - property 1323</li>";
 print "<li>CricketArchive - property 2698</li>";
 print "<li>EU VAT number - property 3608</li>";
+print "<li>USCG Lighthouse ID - property 3723</li>";
 print "<li>Mastodon - property 4033</li>";
 print "<li>UOL Brazil election id - property 5892</li>";
 print "<li>Swedish Organization Number - property 6460</li>";
