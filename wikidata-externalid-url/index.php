@@ -160,6 +160,12 @@ if (! empty($id) ) {
         break;
     }
     break;
+  case 7619: // The Cardinals of the Holy Roman Church ID
+    $cardinal_parts = split(":", $id);
+    $id = $cardinal_parts[0];
+    $name = $cardinal_parts[1];
+    $link_string = "http://webdept.fiu.edu/~mirandas/bios$id.htm#$name";
+    break;
   default:
     if (! empty($exp) ) {
       preg_match('/'.$exp.'/', $id, $a);
@@ -229,6 +235,7 @@ print "<li>Gamepedia article ID - property 6623</li>";
 print "<li>ITF tournament ID - property 6841</li>";
 print "<li>Epitafier.se ID - property 6996</li>";
 print "<li>NLP ID - property 1695</li>";
+print "<li>The Cardinals of the Holy Roman Church ID - property 7619</li>";
 print "</ul>";
 
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
