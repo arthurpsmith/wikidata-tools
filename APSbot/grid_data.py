@@ -12,7 +12,7 @@ class GridData:
         self.fetch_wikidata_relations()
 
     def fetch_wikidata_relations(self):
-        results = wdi_core.WDItemEngine.execute_sparql_query(query="SELECT ?item ?grid WHERE { ?item wdt:P2427 ?grid . }")
+        results = wdi_core.WDItemEngine.execute_sparql_query(query="SELECT ?item ?grid WHERE { ?item p:P2427/ps:P2427 ?grid . }")
         self.grid_wikidata_links = {}
         for i in results['results']['bindings']:
             qid = i['item']['value'].split('/')[-1]
