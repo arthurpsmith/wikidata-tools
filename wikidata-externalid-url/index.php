@@ -160,6 +160,9 @@ if (! empty($id) ) {
         break;
     }
     break;
+  case 8034: // VcBA ID
+    $link_string = str_replace("/", "_", $id) ;
+    break ;
   default:
     if (! empty($exp) ) {
       preg_match('/'.$exp.'/', $id, $a);
