@@ -112,7 +112,7 @@ if (! empty($id) ) {
     $link_string = "http://$m_host/@$m_user";
     break;
   case 5892: // UOL Brazil election id
-    $uol_parts = split("/", $id);
+    $uol_parts = explode("/", $id);
     $uol_year = $uol_parts[0];
     $uol_first_code = $uol_parts[1];
     $uol_second_code = $uol_parts[2];
@@ -127,13 +127,13 @@ if (! empty($id) ) {
     $link_string = str_replace("-", "", $id) ;
     break;
   case 6623: // Gamepedia article ID
-    $gp_parts = split(":", $id);
+    $gp_parts = explode(":", $id);
     $wiki = $gp_parts[0];
     $page = $gp_parts[1];
     $link_string = "https://$wiki.gamepedia.com/$page";
     break;
   case 6841: // ITF tournament ID
-    $itf_parts = split(":", $id);
+    $itf_parts = explode(":", $id);
     $sex = $itf_parts[0];
     $id = $itf_parts[1];
     $link_string = "https://www.itftennis.com/procircuit/tournaments/$sex's-tournament/info.aspx?tournamentid=$id";
