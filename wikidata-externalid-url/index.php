@@ -128,8 +128,8 @@ if (! empty($id) ) {
     break;
   case 6623: // Gamepedia article ID
     $gp_parts = explode(":", $id);
-    $wiki = $gp_parts[0];
-    $page = $gp_parts[1];
+    $wiki = array_unshift($gp_parts);
+    $page = implode(':', $gp_parts);
     $link_string = "https://$wiki.gamepedia.com/$page";
     break;
   case 6841: // ITF tournament ID
