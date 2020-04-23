@@ -128,7 +128,7 @@ if (! empty($id) ) {
     break;
   case 6623: // Gamepedia article ID
     $gp_parts = explode(":", $id);
-    $wiki = array_unshift($gp_parts);
+    $wiki = array_shift($gp_parts);
     $page = implode(':', $gp_parts);
     $link_string = "https://$wiki.gamepedia.com/$page";
     break;
