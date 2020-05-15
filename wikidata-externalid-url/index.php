@@ -205,14 +205,14 @@ print "<li> url - url with parameters %1, %2... eg. <i>".$url."</i></li>";
 print "<li> exp - regular expression eg. <i>".$exp."</i></li>";
 print "<li> id - eg. <i>".$id."</i></li>";
 $p = "?url=".urlencode($url)."&exp=".urlencode($exp)."&id=".urlencode($id);
-print "<li> example <a href='index.php".$p."'>http://tools.wmflabs.org/wikidata-externalid-url/".$p."</a></li>";
+print "<li> example <a href='index.php".$p."'>https://wikidata-externalid-url.toolforge.org/".$p."</a></li>";
 $r = "http://test.org/?vol=113?item=1250";
 print "<li> result  <a href='".$r."'>".$r."</a></li>";
 print "</ul>";
 print "Note: all parameters should be url encoded.<br/>";
 print "Note: this script also URL-decodes the id value so that an id with several embedded parameters can be used as originally intended.";
 
-print "<p>An example: <a href=\"index.php?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315\">http://tools.wmflabs.org/wikidata-externalid-url/?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315</a>.</p>";
+print "<p>An example: <a href=\"index.php?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315\">https://wikidata-externalid-url.toolforge.org/?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315</a>.</p>";
 
 print "<p>Currently supported id translations:</p>";
 print "<ul>";
