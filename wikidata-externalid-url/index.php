@@ -164,6 +164,9 @@ if (! empty($id) ) {
   case 8034: // VcBA ID
     $link_string = str_replace("/", "_", $id) ;
     break ;
+  case 7699: // LIH ID
+    $link_string = preg_replace(array("/([[:lower:]])/","[\*]","[\+]","[\/]"), array("_$1_","-","__",","), $id);
+    break ;
   default:
     if (! empty($exp) ) {
       preg_match('/'.$exp.'/', $id, $a);
