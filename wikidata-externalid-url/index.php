@@ -75,6 +75,13 @@ if (! empty($id) ) {
   case 919: // SOC code
     $link_string = str_replace("-", "", $id) ;
     break;
+  case 1207: // NUKAT
+    if (strlen($id) === 9) { // 'n' + 8 digits
+      $link_string = str_replace('n', 'n%20%20', $id);
+    } else {
+      $link_string = str_replace('n', 'n%20', $id);
+    }
+    break;
   case 1209: // CN
     if (substr($id, 3, 1)==="0") { # for newspapers
         $newspaper_id = str_replace("-", "", $id);
@@ -224,6 +231,7 @@ print "<li>IMDB - property 345</li>";
 print "<li>HURDAT - property 502</li>";
 print "<li>E number - property 628</li>";
 print "<li>SOC code - property 919</li>";
+print "<li>NUKAT - property 1207</li>";
 print "<li>CN - property 1209</li>";
 print "<li>TA98 - property 1323</li>";
 print "<li>CricketArchive - property 2698</li>";
