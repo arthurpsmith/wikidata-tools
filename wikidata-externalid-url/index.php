@@ -174,6 +174,12 @@ if (! empty($id) ) {
   case 7699: // LIH ID
     $link_string = preg_replace(array("/([[:lower:]])/","[\*]","[\+]","[\/]"), array("_$1_","-","__",","), $id);
     break ;
+  case 8679: // Dictionary of Occupational Titles code
+    $code_parts = array();
+    preg_match('/(\d+)\.(\d+)\-(\d+)/', $id, $code_parts);
+    $first_chars = substr($code_parts[1], 0, 2);
+    $link_string = $first_chars . "/" . $code_parts[1] . $code_parts[2] . $code_parts[3];
+    break;
   default:
     if (! empty($exp) ) {
       preg_match('/'.$exp.'/', $id, $a);
@@ -245,6 +251,7 @@ print "<li>ITF tournament ID - property 6841</li>";
 print "<li>Epitafier.se ID - property 6996</li>";
 print "<li>NLP ID - property 1695</li>";
 print "<li>VcBA ID - property 8034</li>";
+print "<li>Dictionary of Occupational Titles code - property 8679</li>";
 print "</ul>";
 
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
