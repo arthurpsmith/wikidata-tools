@@ -72,6 +72,9 @@ if (! empty($id) ) {
   case 882: // FIPS
     $link_string = substr($id, 0, 2) . "/$id";
     break;
+  case 901: // FIPS 10-4 (for CIA World Factbook link)
+    $link_string = strtolower(substr($id, 0, 2));
+    break;
   case 919: // SOC code
     $link_string = str_replace("-", "", $id) ;
     break;
