@@ -182,6 +182,10 @@ if (! empty($id) ) {
     preg_match('/(\d+)\.(\d+)\-(\d+)/', $id, $code_parts);
     $first_chars = substr($code_parts[1], 0, 2);
     $link_string = $first_chars . "/" . $code_parts[1] . $code_parts[2] . $code_parts[3];
+    break;  
+  case 8888: // Concise Literary Encyclopedia identifier
+    $first_digit = substr($id, 0, 1);
+    $link_string = "http://feb-web.ru/feb/kle/kle-abc/ke" . $first_digit . "/$id.html" ;
     break;
   default:
     if (! empty($exp) ) {
