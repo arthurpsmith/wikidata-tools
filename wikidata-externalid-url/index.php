@@ -183,9 +183,9 @@ if (! empty($id) ) {
     $first_chars = substr($code_parts[1], 0, 2);
     $link_string = $first_chars . "/" . $code_parts[1] . $code_parts[2] . $code_parts[3];
     break;  
-  case 8888: // Concise Literary Encyclopedia identifier
+  case 8896: // Concise Literary Encyclopedia identifier
     $first_digit = substr($id, 0, 1);
-    $link_string = "http://feb-web.ru/feb/kle/kle-abc/ke" . $first_digit . "/$id.html" ;
+    $link_string = "ke" . $first_digit . "/ke$id" ;
     break;
   default:
     if (! empty($exp) ) {
