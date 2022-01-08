@@ -295,6 +295,7 @@ print "<li>Gamepedia article ID - property 6623</li>";
 print "<li>ITF tournament ID - property 6841</li>";
 print "<li>Epitafier.se ID - property 6996</li>";
 print "<li>NLP ID - property 1695</li>";
+print "<li>ft.dk politician identifier - property 7882</li>";
 print "<li>VcBA ID - property 8034</li>";
 print "<li>Dictionary of Occupational Titles code - property 8679</li>";
 print "</ul>";
