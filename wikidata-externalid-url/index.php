@@ -177,6 +177,44 @@ if (! empty($id) ) {
   case 7699: // LIH ID
     $link_string = preg_replace(array("/([[:lower:]])/","[\*]","[\+]","[\/]"), array("_$1_","-","__",","), $id);
     break ;
+  case 7882: // ft.dk politician identifier
+    header("Vary: Accept-Language", false);
+    $accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '' ;
+    preg_match_all('/\b(?<!-)\w\w\b/', $accept_language, $matches) ;
+    $preferred = current(array_intersect($matches[0], array("da", "en"))) ;
+
+    if ($preferred == "da") {
+      // See https://da.wikipedia.org/wiki/Modul:Ft.dk_link
+      // Add prefix, e.g. "m/" for "mette-frederiksen", unless ID already contains prefix.
+      $url_prefix = "https://www.ft.dk/medlemmer/mf/" ;
+      if (strpos($id, "/")) {
+        $link_string = $id ;
+      }
+      else {
+        $link_string = substr($id, 0, 1) . "/" . $id ;
+      }
+    }
+    else {
+      // See https://en.wikipedia.org/wiki/Module:Ft.dk_link
+      $url_prefix = "https://www.thedanishparliament.dk/members/" ;
+      $id = strtr($id, array(
+        'á' => 'a',  // e.g. Annita á Fríðriksmørk
+        'é' => 'e',  // e.g. René Christensen
+        'í' => 'i',  // e.g. Annita á Fríðriksmørk
+        'ü' => 'u',  // e.g. Hüseyin Arac
+        'ú' => 'u',  // e.g. Sjúrður Skaale
+        'æ' => 'ae', // e.g. Uffe Elbæk
+        'ä' => 'ae',
+        'ø' => 'oe', // e.g. Lars Løkke Rasmussen
+        'ö' => 'oe', // e.g. Özlem Cekic
+        'ó' => 'oe', // e.g. Tórbjørn Jacobsen
+        'ð' => 'oe', // e.g. Sjúrður Skaale
+        'å' => 'aa',
+      )) ;
+      // Strip prefix, e.g. "oe/" in "oe/özlem-sara-cekic".
+      $link_string = preg_replace('/^.*\//', '', $id) ;
+    }
+    break ;
   case 8679: // Dictionary of Occupational Titles code
     $code_parts = array();
     preg_match('/(\d+)\.(\d+)\-(\d+)/', $id, $code_parts);
@@ -257,6 +295,7 @@ print "<li>Gamepedia article ID - property 6623</li>";
 print "<li>ITF tournament ID - property 6841</li>";
 print "<li>Epitafier.se ID - property 6996</li>";
 print "<li>NLP ID - property 1695</li>";
+print "<li>ft.dk politician identifier - property 7882</li>";
 print "<li>VcBA ID - property 8034</li>";
 print "<li>Dictionary of Occupational Titles code - property 8679</li>";
 print "</ul>";
