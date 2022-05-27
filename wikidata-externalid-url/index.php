@@ -233,17 +233,17 @@ if (! empty($id) ) {
       }
       $link_string = $url;
     }
-    else
-      $link_string = $id ;
     break;
     
 
     break ;
  }
 
- $redirect_url = $url_prefix . $link_string . $url_suffix ;
- header("Location: $redirect_url");
- exit();
+ if (isset($link_string)) {
+  $redirect_url = $url_prefix . $link_string . $url_suffix ;
+  header("Location: $redirect_url");
+  exit();
+ }
 }
 
 print "<html><head><meta charset='utf-8'><title>Wikidata External ID redirector</title></head>" ;
