@@ -16,6 +16,9 @@
 // for a number of the conversions done here.
 
 function check_blocked($url) {
+    if ( preg_match('#^https://www.imdb.com/#', $url) ) { # Allow imdb!
+       return false;
+    }
     if (! preg_match('#^https?://[^/]+/#', $url) ) { # Block non-http responses
 	return true;
     }
