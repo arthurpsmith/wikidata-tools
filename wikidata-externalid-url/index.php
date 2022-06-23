@@ -279,7 +279,7 @@ if (! empty($id) ) {
  $redirect_url = $url_prefix . $link_string . $url_suffix ;
 
  if ( check_blocked( $redirect_url ) ) {
-      print "WARNING: $redirect_url is blocked";
+      print "WARNING: generated URL is blocked";
  } else {
       header("Location: $redirect_url");
  }
