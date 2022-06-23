@@ -15,6 +15,38 @@
 // See https://www.wikidata.org/wiki/MediaWiki:Gadget-AuthorityControl.js
 // for a number of the conversions done here.
 
+function check_blocked($url) {
+    if (! preg_match('#^https?://[^/]+/#', $url) ) { # Block non-http responses
+	return true;
+    }
+
+    $ds = file_get_contents('block_list_cache');
+    if ( $ds === false ) {
+	$block_list_cache = [];
+    } else {
+	$block_list_cache = unserialize($ds);
+    }
+
+    $filtered_url = $url;
+    if ( preg_match('/\?/', $url) ) { # Filter out query parameters
+	$filtered_url = preg_replace('/\?.*$/', '', $url);
+    } else if ( preg_match('#^https?://[^/]+/.*[^/]+$#', $url) ) { # Filter out trailing characters after a /
+	$filtered_url = preg_replace('/[^\/]+$/', '', $url);
+    }
+
+    if ( isset($block_list_cache[$filtered_url]) ) {
+	return $block_list_cache[$filtered_url];
+    }
+    
+    $block_list_api_url = "https://www.wikidata.org/w/api.php?action=spamblacklist&format=json&url=" . urlencode($filtered_url);
+    $j = json_decode(file_get_contents($block_list_api_url), true);
+    $result = $j['spamblacklist']['result'] != 'ok';
+
+    $block_list_cache[$filtered_url] = $result;
+    file_put_contents('block_list_cache', serialize($block_list_cache));
+    return $result;
+}
+
 $property = isset($_REQUEST['p']) ? $_REQUEST['p'] : '' ;
 $url_prefix = isset($_REQUEST['url_prefix']) ? $_REQUEST['url_prefix'] : '' ;
 $url_suffix = isset($_REQUEST['url_suffix']) ? $_REQUEST['url_suffix'] : '' ;
@@ -242,7 +274,12 @@ if (! empty($id) ) {
  }
 
  $redirect_url = $url_prefix . $link_string . $url_suffix ;
- header("Location: $redirect_url");
+
+ if ( check_blocked( $redirect_url ) ) {
+      print "WARNING: $redirect_url is blocked";
+ } else {
+      header("Location: $redirect_url");
+ }
  exit();
 }
 
