@@ -63,6 +63,7 @@ if (! empty($id) ) {
     $link_string = str_replace(" ", "", $id) ;
     break ;
   case 345: // IMDB
+    $url_prefix = "https://www.imdb.com/";
     switch(substr($id, 0, 2)) {
       case 'nm':
         $link_string = "name/$id/";
