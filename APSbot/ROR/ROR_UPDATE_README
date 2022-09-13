@@ -46,7 +46,6 @@
 13.
    (a) For each, filter those with no wikidata qid
    (b) Check for ones with a wikipedia URL, if specific enough, link up!
-      -- if a lot, dump list to match and use map_wp_wd.rb to automate getting wikidata id's from wikipedia URL's, then qs_dump.rb to get quickstatements format
    (c) Match purely on name, see how it does...
    (d) Match on name and country
    (e) Match on name and url
