@@ -142,15 +142,16 @@ if (! empty($id) ) {
     }
     break;
   case 3012: // Statistics Canada Geo code
-    url_prefix = 'https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/page.cfm?Lang=E&DGUIDlist=2021A000' ;
-    digits = strlen(id) ;
-    if (digits <= 2) {
+    $url_prefix = "https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/page.cfm?Lang=E&DGUIDlist=2021A000" ;
+    $digits = strlen($id) ;
+    if ($digits <= 2) {
         $link_string = "2$id";
-    } elseif (digits <= 4) {
+    } elseif ($digits <= 4) {
         $link_string = "3$id";
-    } elseif (digits == 5) {
+    } elseif ($digits == 5) {
+        $url_prefix = "https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/page.cfm?Lang=E&DGUIDlist=2013A000" ;
         $link_string = "4$id";
-    } elseif (digits == 6) {
+    } elseif ($digits == 6) {
         $link_string = "6$id";
     } else {
         $link_string = "5$id";
