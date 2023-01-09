@@ -141,6 +141,21 @@ if (! empty($id) ) {
       $link_string = $id;
     }
     break;
+  case 3012: // Statistics Canada Geo code
+    url_prefix = 'https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/page.cfm?Lang=E&DGUIDlist=2021A000' ;
+    digits = strlen(id) ;
+    if (digits <= 2) {
+        $link_string = "2$id";
+    } elseif (digits <= 4) {
+        $link_string = "3$id";
+    } elseif (digits == 5) {
+        $link_string = "4$id";
+    } elseif (digits == 6) {
+        $link_string = "6$id";
+    } else {
+        $link_string = "5$id";
+    }
+    break;
   case 3608: // EU VAT number
     $member_state_code = substr($id, 0, 2);
     $vat_digits = substr($id, 2);
