@@ -277,6 +277,12 @@ if (! empty($id) ) {
     $first_digit = substr($id, 0, 1);
     $link_string = "ke" . $first_digit . "/ke$id" ;
     break;
+  case 11988: // wiki.gg Article ID
+    $wikigg_parts = explode(":", $id);
+    $wiki = array_shift($wikigg_parts);
+    $page = implode(':', $wikigg_parts);
+    $link_string = "https://$wiki.wiki.gg/$page";
+    break;
   default:
     if (! empty($exp) ) {
       preg_match('/'.$exp.'/', $id, $a);
@@ -355,6 +361,7 @@ print "<li>NLP ID - property 1695</li>";
 print "<li>ft.dk politician identifier - property 7882</li>";
 print "<li>VcBA ID - property 8034</li>";
 print "<li>Dictionary of Occupational Titles code - property 8679</li>";
+print "<li>wiki.gg article ID - property 11988</li>";
 print "</ul>";
 
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
