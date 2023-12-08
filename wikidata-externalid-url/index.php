@@ -56,8 +56,15 @@ $url_suffix = isset($_REQUEST['url_suffix']) ? $_REQUEST['url_suffix'] : '' ;
 $url = rawurldecode(isset($_REQUEST['url']) ? $_REQUEST['url'] : '') ;
 $exp = rawurldecode(isset($_REQUEST['exp']) ? $_REQUEST['exp'] : '');
 $id = rawurldecode(isset($_REQUEST['id']) ? $_REQUEST['id'] : '') ;
+$toupper = isset($_REQUEST['toupper']) ? $_REQUEST['toupper'] : '0' ;
+$tolower = isset($_REQUEST['tolower']) ? $_REQUEST['tolower'] : '0' ;
 
 if (! empty($id) ) {
+ if ($toupper == '1') {
+    $id = strtoupper($id);
+ } else if ($tolower == '1') {
+    $id = strtolower($id);
+ }
  switch($property) {
   case 213: // ISNI
     $link_string = str_replace(" ", "", $id) ;
