@@ -283,6 +283,12 @@ if (! empty($id) ) {
     $page = implode(':', $wikigg_parts);
     $link_string = "https://$wiki.wiki.gg/$page";
     break;
+  case 12189: // Paradox Wikis article ID
+    $paradox_parts = explode(":", $id);
+    $wiki = array_shift($paradox_parts);
+    $page = implode(':', $paradox_parts);
+    $link_string = "https://$wiki.paradoxwikis.com/$page";
+    break;
   default:
     if (! empty($exp) ) {
       preg_match('/'.$exp.'/', $id, $a);
