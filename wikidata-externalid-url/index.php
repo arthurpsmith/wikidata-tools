@@ -167,7 +167,7 @@ if (! empty($id) ) {
   case 3608: // EU VAT number
     $member_state_code = substr($id, 0, 2);
     $vat_digits = substr($id, 2);
-    $link_string = "$member_state_code&number=$vat_digits";
+    $link_string = "$member_state_code/vat/$vat_digits";
     break;
   case 3723: // USCG Lighthouse ID
     preg_match('/(\d+)-(\d+(?:.\d*)?)/', $id, $a);
