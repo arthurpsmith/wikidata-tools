@@ -52,6 +52,7 @@
 "Czech Republic",Q213
 "Czechia",Q213
 "Democratic Republic of the Congo",Q974
+"DR Congo",Q974
 "Denmark",Q35
 "Djibouti",Q977
 "Dominica",Q784
@@ -142,6 +143,7 @@
 "Namibia",Q1030
 "Nepal",Q837
 "Netherlands",Q55
+"The Netherlands",Q55
 "New Caledonia",Q33788
 "New Zealand",Q664
 "Nicaragua",Q811
@@ -156,6 +158,7 @@
 "Pakistan",Q843
 "Palau",Q695
 "Palestinian Territory",Q219060
+"Palestine",Q219060
 "Panama",Q804
 "Papua New Guinea",Q691
 "Paraguay",Q733
@@ -172,8 +175,10 @@
 "Russia",Q159
 "Rwanda",Q1037
 "Saint Kitts and Nevis",Q763
+"St Kitts and Nevis",Q763
 "Saint Lucia",Q760
 "Saint Vincent and the Grenadines",Q757
+"St Vincent and Grenadines",Q757
 "Samoa",Q683
 "Sao Tome and Principe",Q1039
 "San Marino",Q238
@@ -205,11 +210,13 @@
 "Tajikistan",Q863
 "Tanzania",Q924
 "Thailand",Q869
+"Timor-Leste",Q574
 "Togo",Q945
 "Tonga",Q678
 "Trinidad and Tobago",Q754
 "Tunisia",Q948
 "Turkey",Q43
+"Türkiye",Q43
 "Turkmenistan",Q874
 "Turks and Caicos Islands",Q18221
 "Tuvalu",Q672

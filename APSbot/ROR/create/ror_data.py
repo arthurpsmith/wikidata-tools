@@ -45,7 +45,7 @@ class RorData:
     def all_valid_ids(self):
         valid_id_list = []
         for inst in self.ror_full_data:
-            if 'name' in inst:
+            if inst['status'] == 'active':
                 valid_id_list.append(inst['id'].split('/')[-1])
         return valid_id_list
 

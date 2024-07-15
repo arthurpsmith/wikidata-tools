@@ -4,7 +4,7 @@ import csv
 p_ror_id = 'P6782'
 p_stated_in = 'S248'
 
-ror_release_qid = 'Q113679780' # ROR release 1.5
+ror_release_qid = 'Q127405614' # ROR release 1.49
 
 def process_ror_data(filename):
     with open(filename) as csvfile:

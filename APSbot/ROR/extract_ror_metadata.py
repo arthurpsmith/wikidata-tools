@@ -31,7 +31,7 @@ with open(ror_data_file, 'r') as df:
 
 with open('ror_metadata.csv', 'w') as csvfile:
     ror_writer = csv.writer(csvfile)
-    ror_writer.writerow(['ROR ID', 'Name', 'Wikipedia URL', 'Inception', 'ISNI', 'Wikidata ID', 'City', 'Country', 'Inst type', 'website'])
+    ror_writer.writerow(['ROR ID', 'Name', 'Wikipedia URL', 'Inception', 'ISNI', 'Wikidata ID', 'City', 'Country', 'Inst type', 'website', 'status'])
     for ror_entry in ror_data:
         ror_id = ror_entry['id'].split('/')[-1]
         name = ror_entry['name']
@@ -39,6 +39,7 @@ with open('ror_metadata.csv', 'w') as csvfile:
         website = get_first_value_if_any(ror_entry, 'links')
         wikipedia_url = ror_entry['wikipedia_url']
         inception = ror_entry['established']
+        status = ror_entry['status']
         country = ror_entry['country']['country_name']
         city = None
         address = get_first_value_if_any(ror_entry, 'addresses')
@@ -46,4 +47,4 @@ with open('ror_metadata.csv', 'w') as csvfile:
             city = address['city']
         isni = get_best_external_id(ror_entry, 'ISNI')
         wikidata_id = get_best_external_id(ror_entry, 'Wikidata')
-        ror_writer.writerow([ror_id, name, wikipedia_url, inception, isni, wikidata_id, city, country, type, website])
+        ror_writer.writerow([ror_id, name, wikipedia_url, inception, isni, wikidata_id, city, country, type, website, status])

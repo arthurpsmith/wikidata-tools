@@ -1,3 +1,5 @@
 wikidataintegrator
 pandas
 tqdm
+setuptools
+plantuml

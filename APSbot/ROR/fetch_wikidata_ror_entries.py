@@ -16,9 +16,10 @@ def get_sparql(query):
 
 with open('wikidata_ror.csv', 'w') as csvfile:
     writer = csv.writer(csvfile)
-    writer.writerow(['Wikidata ID', 'ROR ID'])
-    ror_items = get_sparql("SELECT ?item ?ror WHERE { ?item p:P6782 ?stmt . ?stmt ps:P6782 ?ror; wikibase:rank ?rank .  FILTER(?rank != wikibase:DeprecatedRank) }")
+    writer.writerow(['Wikidata ID', 'ROR ID', 'Deprecated'])
+    ror_items = get_sparql("SELECT ?item ?ror ?deprecated WHERE { ?item p:P6782 ?stmt . ?stmt ps:P6782 ?ror; wikibase:rank ?rank . BIND(?rank = wikibase:DeprecatedRank AS ?deprecated) }")
     for ror_item in ror_items:
         qid = ror_item['item']['value'].split('/')[-1]
         ror_id = ror_item['ror']['value']
-        writer.writerow([qid, ror_id])
+        deprecated = ror_item['deprecated']['value']
+        writer.writerow([qid, ror_id, deprecated])
