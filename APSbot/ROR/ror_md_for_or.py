@@ -1,6 +1,6 @@
 import csv
 
-ror_md_file = 'ror_metadata.csv'
+ror_md_file = 'ror_metadata_v2.csv'
 wd_ror_file = 'wikidata_ror.csv'
 
 wditems_by_ror = {}
