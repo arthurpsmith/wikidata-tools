@@ -236,6 +236,7 @@ if (! empty($id) ) {
     $link_string = str_replace("/", "_", $id) ;
     break ;
   case 7699: // LIH ID
+    $url_prefix = str_replace("|", "%7C", $url_prefix);
     $link_string = preg_replace(array("/([[:lower:]])/","[\*]","[\+]","[\/]"), array("_$1_","-","__",","), $id);
     break ;
   case 7882: // ft.dk politician identifier
