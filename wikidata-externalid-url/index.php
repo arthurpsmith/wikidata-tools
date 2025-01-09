@@ -124,6 +124,8 @@ if (! empty($id) ) {
   case 1207: // NUKAT
     if (strlen($id) === 9) { // 'n' + 8 digits
       $link_string = str_replace('n', 'n%20%20', $id);
+    } else if (substr($id, 0, 2) === "nx") {
+      $link_string = $id;
     } else {
       $link_string = str_replace('n', 'n%20', $id);
     }
