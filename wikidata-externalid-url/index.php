@@ -182,6 +182,11 @@ if (! empty($id) ) {
     $m_host = $mastodon_parts[2];
     $link_string = "http://$m_host/@$m_user";
     break;
+  case 4496: // NACE code rev.2
+    $url_prefix = "https://showvoc.op.europa.eu/";
+    $url_id = str_replace(".", "", $id);
+    $link_string = "#/datasets/ESTAT_Statistical_Classification_of_Economic_Activities_in_the_European_Community_Rev._2.1._%28NACE_2.1%29/data?resId=http:%2F%2Fdata.europa.eu%2Fux2%2Fnace2.1%2F$url_id";
+    break;
   case 5892: // UOL Brazil election id
     $uol_parts = explode("/", $id);
     $uol_year = $uol_parts[0];
@@ -349,10 +354,16 @@ print "<li> example <a href='index.php".$p."'>https://wikidata-externalid-url.to
 $r = "http://test.org/?vol=113?item=1250";
 print "<li> result  <a href='".$r."'>".$r."</a></li>";
 print "</ul>";
+
+print "This accepts two additional parameters to convert the id from upper/lowercase:" ;
+print "<ul>";
+print "<li> toupper - a value of 1 converts the id to uppercase </li>";
+print "<li> tolower - a value of 1 converts the id to lowercase </li>";
+print "</ul>";
 print "Note: all parameters should be url encoded.<br/>";
 print "Note: this script also URL-decodes the id value so that an id with several embedded parameters can be used as originally intended.";
 
-print "<p>An example: <a href=\"index.php?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315\">https://wikidata-externalid-url.toolforge.org/?p=213&url_prefix=http://isni.org/&id=0000 0000 8045 6315</a>.</p>";
+print "<p>An example: <a href=\"index.php?p=345&uurl_prefix=https://www.imdb.com/&id=nm0010930\">https://wikidata-externalid-url.toolforge.org/?p=345&url_prefix=https://www.imdb.com/&id=nm0010930</a>.</p>";
 
 print "<p>Currently supported id translations:</p>";
 print "<ul>";
@@ -368,6 +379,7 @@ print "<li>CricketArchive - property 2698</li>";
 print "<li>EU VAT number - property 3608</li>";
 print "<li>USCG Lighthouse ID - property 3723</li>";
 print "<li>Mastodon - property 4033</li>";
+print "<li>NACE code rev.2 - property 4496</li>";
 print "<li>UOL Brazil election id - property 5892</li>";
 print "<li>Swedish Organization Number - property 6460</li>";
 print "<li>Gamepedia article ID - property 6623</li>";
