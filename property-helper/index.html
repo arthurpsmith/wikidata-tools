@@ -1,0 +1,20 @@
+<html><head><meta charset='utf-8'><title>Property Creation Helper</title></head>
+<body><h1>Wikidata Property Creation Helper</h1>
+
+<p>
+Copy and paste the full URL from the Wikidata property proposal page here (i.e. it should look something like <pre>https://www.wikidata.org/wiki/Wikidata:Property_proposal/XXXXX</pre>).
+</p>
+
+<div>
+<form method='post' class='form form-inline' action='create_property.php'>
+<div>Proposal URL: <input name='proposal_url' type='text' /></div>
+<div><input type='submit' class='btn btn-primary' name='doit' value='Create property from proposal' /></div>
+</form>
+</div>
+
+<hr>
+
+<div>
+The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/property-helper\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>.
+</div>
+</body></html>
