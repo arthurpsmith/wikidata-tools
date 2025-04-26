@@ -230,7 +230,7 @@ foreach (array_keys($proposal_fields) as $field) {
 }
 
 $quickstatements_api_url = 'https://quickstatements.toolforge.org/api.php';
-print "<div><form method='post' class='form form-inline' action='$quickstatements_api_url'>";
+print "<div><form method='post' class='form form-inline' action='$quickstatements_api_url' target='_blank'>";
 print "<input type='hidden' name='action' value='import' />" ;
 print "<input type='hidden' name='temporary' value='1' />" ;
 print "<input type='hidden' name='openpage' value='1' />" ;
