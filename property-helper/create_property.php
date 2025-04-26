@@ -56,7 +56,7 @@ function print_footer() {
 }
 
 print "<html><head><meta charset='utf-8'><title>Property Creation Helper</title></head>" ;
-print "<body><h1>Wikidata Property Creation Helper</h1>" ;
+print "<body><a href="/"><h1>Wikidata Property Creation Helper</h1></a>" ;
 
 $proposal_url = isset($_REQUEST['proposal_url']) ? $_REQUEST['proposal_url'] : '' ;
 if (empty($proposal_url)) {
@@ -218,6 +218,13 @@ if (array_key_exists('distinct values constraint', $proposal_fields)) {
 if (array_key_exists('allowed values', $proposal_fields)) {
 	$allowed = $proposal_fields['allowed values'];
 	$qs_commands .= "LAST\t{$constraint_prop}\tQ21502404\tP1793\t\"{$allowed}\"\n";
+}
+if (array_key_exists('domain', $proposal_fields)) { # Subject type constraint
+	$dvalue = reinsert_templates_in_string_value($template_list,
+		$proposal_fields['domain']);
+	if (str_starts_with($dvalue, 'Q')) {
+		$qs_commands .= "LAST\t{$constraint_prop}\tQ21503250\tP2308\t{$dvalue}\tP2309\t\Q21503252"\n";
+	}
 }
 foreach (array_keys($proposal_fields) as $field) {
 	if (str_starts_with($field, 'example')) {
