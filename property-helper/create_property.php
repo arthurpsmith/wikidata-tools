@@ -189,8 +189,16 @@ if (array_key_exists('Wikidata project', $proposal_fields)) {
 
 # Constraints:
 $constraint_prop = 'P2302';
-if ($datatype == 'external-id') { # Standard boiler-plate type and constraints for ids
-	$qs_commands .= "LAST\tP31\tQ19847637\n";
+if ($datatype == 'external-id') { # Type and standard boiler-plate constraints for ids
+	$property_type = 'Q19847637';
+	if (array_key_exists('implied notability', $proposal_fields)) {
+		$tvalue = reinsert_templates_in_string_value($template_list,
+			$proposal_fields['implied notability']);
+		if (str_starts_with($tvalue, 'Q')) {
+			$property_type = $tvalue;
+		}
+	}
+	$qs_commands .= "LAST\tP31\t{$property_type}\n";
     # allowed entity type = wikibase-item
 	$qs_commands .= "LAST\t{$constraint_prop}\tQ52004125\tP2305\tQ29934200\n";
     # allowed scope = as main value or reference
