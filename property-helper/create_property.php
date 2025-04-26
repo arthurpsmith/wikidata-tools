@@ -56,7 +56,7 @@ function print_footer() {
 }
 
 print "<html><head><meta charset='utf-8'><title>Property Creation Helper</title></head>" ;
-print "<body><a href="/"><h1>Wikidata Property Creation Helper</h1></a>" ;
+print "<body><a href='/'><h1>Wikidata Property Creation Helper</h1></a>" ;
 
 $proposal_url = isset($_REQUEST['proposal_url']) ? $_REQUEST['proposal_url'] : '' ;
 if (empty($proposal_url)) {
@@ -183,7 +183,7 @@ if (array_key_exists('Wikidata project', $proposal_fields)) {
 	$wp_value = reinsert_templates_in_string_value($template_list,
 		$proposal_fields['Wikidata project']);
 	foreach (preg_split('/\s+/', $wp_value) as $project) {
-		$qs_comands .= "LAST\tP6104\t{$project}\n";
+		$qs_commands .= "LAST\tP6104\t{$project}\n";
 	}
 }
 
@@ -223,7 +223,7 @@ if (array_key_exists('domain', $proposal_fields)) { # Subject type constraint
 	$dvalue = reinsert_templates_in_string_value($template_list,
 		$proposal_fields['domain']);
 	if (str_starts_with($dvalue, 'Q')) {
-		$qs_commands .= "LAST\t{$constraint_prop}\tQ21503250\tP2308\t{$dvalue}\tP2309\t\Q21503252"\n";
+		$qs_commands .= "LAST\t{$constraint_prop}\tQ21503250\tP2308\t{$dvalue}\tP2309\tQ21503252\n";
 	}
 }
 foreach (array_keys($proposal_fields) as $field) {
