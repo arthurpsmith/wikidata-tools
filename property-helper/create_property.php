@@ -61,7 +61,7 @@ print "<body><h1>Wikidata Property Creation Helper</h1>" ;
 $proposal_url = isset($_REQUEST['proposal_url']) ? $_REQUEST['proposal_url'] : '' ;
 if (empty($proposal_url)) {
 	print "<form method='post' class='form form-inline'>
-<div>Proposal URL: <input name='proposal_url' type='text' /></div>
+<div>Proposal URL: <input size=80 name='proposal_url' type='text' /></div>
 <div><input type='submit' class='btn btn-primary' name='doit' value='Process proposal' /></div>";
         print "</form>";
 	print_footer();
@@ -234,12 +234,12 @@ print "<div><form method='post' class='form form-inline' action='$quickstatement
 print "<input type='hidden' name='action' value='import' />" ;
 print "<input type='hidden' name='temporary' value='1' />" ;
 print "<input type='hidden' name='openpage' value='1' />" ;
-print "<div>Quickstatements V1 commands for creating property:" ;
-print "<textarea name='data' rows=20>" . $qs_commands . "</textarea>";
-print "<input type='submit' class='btn btn-primary' name='qs' value='Send to Quickstatements' /><br/>";
+print "<div>Quickstatements V1 commands for creating property:</div>" ;
+print "<div><textarea name='data' cols=80 rows=30>" . $qs_commands . "</textarea></div>";
+print "<div><input type='submit' class='btn btn-primary' name='qs' value='Send to Quickstatements' /></div>";
 print "</form></div>";
 print "<div>Don't forget to add the {{Property documentation}} template on the Property Talk page.</div>";
-print "<div>The <a href='$proposal_url'>original proposal</a> also needs to be updated with the new property id.</div>";
+print "<div>The <a href='$proposal_url'>original proposal</a> also needs to be updated with the new property id.</div><hr>";
 print_footer();
 
 ?>
