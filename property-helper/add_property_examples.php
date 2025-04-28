@@ -107,7 +107,7 @@ function proposal_examples_to_qs_string($label_text, $proposal_text, $property_i
 				$example_object = $matches[1];
 			}
 			if (str_starts_with($example_parts[0], 'Q')) {
-				$qs_commands .= "NEW_PROP\tP1855\t{$example_subject}\tNEW_PROP\t\"{$example_object}\"\n";
+				$qs_commands .= "{$property_id}\tP1855\t{$example_subject}\t{$property_id}\t\"{$example_object}\"\n";
 			}
 		}
 	}
