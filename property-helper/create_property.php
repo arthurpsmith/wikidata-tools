@@ -202,23 +202,6 @@ function label_and_proposal_to_qs_string($label_text, $proposal_text, $proposal_
 			$qs_commands .= "LAST\t{$constraint_prop}\tQ21503250\tP2308\t{$dvalue}\tP2309\tQ21503252\n";
 		}
 	}
-	foreach (array_keys($proposal_fields) as $field) {
-		if (str_starts_with($field, 'example')) {
-			$example_data = $proposal_fields[$field];
-			$example_data = reinsert_templates_in_string_value($template_list,
-				$example_data);
-			$example_parts = preg_split('/\s+/', $example_data);
-			$example_subject = $example_parts[0];
-			$example_object = $example_parts[array_key_last($example_parts)];
-			$matches = [];
-			if (preg_match('/(\S+)\]/', $example_object, $matches)) {
-				$example_object = $matches[1];
-			}
-			if (str_starts_with($example_parts[0], 'Q')) {
-				$qs_commands .= "NEW_PROP\tP1855\t{$example_subject}\tNEW_PROP\t\"{$example_object}\"\n";
-			}
-		}
-	}
 	return $qs_commands;
 }
 
@@ -267,6 +250,12 @@ foreach ($proposal_sections AS $index => $proposal_section) {
 	print "<div>Quickstatements V1 commands for creating property:</div>" ;
 	print "<div><textarea name='data' cols=80 rows=30>" . $qs_commands . "</textarea></div>";
 	print "<div><input type='submit' class='btn btn-primary' name='qs' value='Send to Quickstatements' /></div>";
+	print "</form></div>";
+	print "<div>Examples need the new property id, please enter it here and submit to add them:</div>";
+	print "<div><form method='post' class='form form-inline' action='add_property_examples.php' target='_blank'>";
+	print "<input type='hidden' name='proposal_url' value='$proposal_url' />";
+	print "<input name='property_id' />";
+	print "<input type='submit' class='btn btn-primary' name='ex' value='Prepare Examples' />";
 	print "</form></div>";
 	print "<div>Don't forget to add the {{Property documentation}} template on the Property Talk page.</div>";
 	print "<div>The <a href='$proposal_url'>original proposal</a> also needs to be updated with the new property id.</div><hr>";
