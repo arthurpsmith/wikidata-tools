@@ -212,7 +212,7 @@ function print_footer() {
 
 print "<html><head>
 <meta charset='utf-8'>
-<link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+<link rel='stylesheet' href='https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap.min.css'>
 <title>Property Creation Helper</title></head>" ;
 print "<body style='margin:10;padding:10'><a href='/'><h1>Wikidata Property Creation Helper</h1></a>" ;
 
@@ -246,7 +246,7 @@ foreach ($proposal_sections AS $index => $proposal_section) {
 
 	$quickstatements_api_url = 'https://quickstatements.toolforge.org/api.php';
 	print "<div>Proposal {$index}</div>";
-	print "<div><form method='post' class='form form-inline' action='$quickstatements_api_url' target='_blank'>";
+	print "<div><form method='post' class='form' action='$quickstatements_api_url' target='_blank'>";
 	print "<input type='hidden' name='action' value='import' />" ;
 	print "<input type='hidden' name='temporary' value='1' />" ;
 	print "<input type='hidden' name='openpage' value='1' />" ;
@@ -257,7 +257,7 @@ foreach ($proposal_sections AS $index => $proposal_section) {
 	print "<div>Examples need the new property id, please enter it here and submit to add them:</div>";
 	print "<div><form method='post' class='form form-inline' action='add_property_examples.php' target='_blank'>";
 	print "<input type='hidden' name='proposal_url' value='$proposal_url' />";
-	print "<input name='property_id' />";
+	print "New Property ID (i.e. Pxxxx): <input name='property_id' />";
 	print "<input type='submit' class='btn btn-primary' name='ex' value='Prepare Examples' />";
 	print "</form></div>";
 	print "<div>Don't forget to add the {{Property documentation}} template on the Property Talk page.</div>";
