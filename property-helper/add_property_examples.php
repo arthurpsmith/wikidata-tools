@@ -50,7 +50,7 @@ function reinsert_templates_in_string_value($template_list, $content) {
 	return $content;
 }
 
-function proposal_examples_to_qs_string($label_text, $proposal_text, $property_id) {
+function proposal_examples_to_qs_string($proposal_text, $property_id) {
 	$proposal = preg_replace('/^{{/', '', $proposal_text);
 	$proposal = preg_replace('/}}$/', '', $proposal);
 	$template_list = [];
@@ -145,9 +145,8 @@ foreach ($pf_parts AS $index => $pf_part) {
 }
 
 foreach ($proposal_sections AS $index => $proposal_section) {
-	$qs_commands = label_and_proposal_to_qs_string(
-		$proposal_section['label'], $proposal_section['proposal'],
-		$proposal_url);
+	$qs_commands = proposal_examples_to_qs_string(
+		$proposal_section['proposal'], $property_id);
 
 	$quickstatements_api_url = 'https://quickstatements.toolforge.org/api.php';
 	print "<div>Examples {$index}</div>";
