@@ -102,10 +102,14 @@ function label_and_proposal_to_qs_string($label_text, $proposal_text, $proposal_
 	
 	$qs_commands = "";
 
+	$status = $proposal_fields['status'];
+	if ($status != 'ready') {
+		return "PROPOSAL CANNOT BE CREATED: 'status' is not 'ready'";
+	}
 	$datatype = $proposal_fields['datatype'];
 	if (empty($datatype)) {
 		fwrite(STDERR, "Error: datatype not set in proposal");
-		exit(1);
+		return "PROPOSAL CANNOT BE CREATED: 'datatype' not set";
 	}
 	$qs_commands .= "CREATE_PROPERTY\t{$datatype}\n";
 	foreach ($labels AS $lang => $lang_label) {
