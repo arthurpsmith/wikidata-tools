@@ -210,8 +210,11 @@ function print_footer() {
 	print "</body></html>";
 }
 
-print "<html><head><meta charset='utf-8'><title>Property Creation Helper</title></head>" ;
-print "<body><a href='/'><h1>Wikidata Property Creation Helper</h1></a>" ;
+print "<html><head>
+<meta charset='utf-8'>
+<link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+<title>Property Creation Helper</title></head>" ;
+print "<body style='margin:10;padding:10'><a href='/'><h1>Wikidata Property Creation Helper</h1></a>" ;
 
 $proposal_url = isset($_REQUEST['proposal_url']) ? $_REQUEST['proposal_url'] : '' ;
 if (empty($proposal_url)) {
