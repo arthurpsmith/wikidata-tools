@@ -309,7 +309,13 @@ if (! empty($id) ) {
     $slug = array_shift($nexusmods_parts);
     $numeric_id = implode(':', $nexusmods_parts);
     $link_string = "https://www.nexusmods.com/$slug/mods/$numeric_id";
-    break;	 
+    break;
+  case 13524: // PromoDJ track ID
+    $promodj_parts = explode(":", $id);
+    $musician = array_shift($promodj_parts);
+    $trackno = implode(':', $promodj_parts);
+    $link_string = "$musician/tracks/$trackno";
+    break;
   default:
     if (! empty($exp) ) {
       preg_match('/'.$exp.'/', $id, $a);
@@ -397,6 +403,7 @@ print "<li>VcBA ID - property 8034</li>";
 print "<li>Dictionary of Occupational Titles code - property 8679</li>";
 print "<li>wiki.gg article ID - property 11988</li>";
 print "<li>NexusMods mod ID - property 13405</li>";
+print "<li>PromoDJ track ID - property 13524</li>";
 print "</ul>";
 
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
