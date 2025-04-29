@@ -43,10 +43,13 @@ def create_ror_item(ror_data, ror_id, ror_release_qid, login_instance):
     for language in org_aliases.keys():
         wd_item.set_aliases(org_aliases[language], lang=language)
     for label_hash in org_labels:
-        if label_hash['language'] == 'en':
+        lang_code = label_hash['language']
+        if (lang_code is None):
+            lang_code = 'en'
+        if lang_code == 'en':
             wd_item.set_aliases([label_hash['label']], 'en', append=True)
         else:
-            wd_item.set_label(label=label_hash['label'], lang=label_hash['language'])
+            wd_item.set_label(label=label_hash['label'], lang=lang_code)
     new_item_id = wd_item.write(login_instance, edit_summary='Creating item from ROR record via APSbot_ror_create script')
     print("created {0}".format(new_item_id))
 
