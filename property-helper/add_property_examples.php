@@ -130,7 +130,7 @@ function proposal_examples_to_qs_string($proposal_text, $property_id) {
 			}
 			$formatted_example_object = format_object_by_datatype($datatype, $example_object);
 			
-			$example_property_id = None;
+			$example_property_id = NULL;
 			if (str_starts_with($example_subject, 'Q')) {
 				$example_property_id = 'P1855';
 			}
