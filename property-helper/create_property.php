@@ -50,6 +50,48 @@ function reinsert_templates_in_string_value($template_list, $content) {
 	return $content;
 }
 
+# Translate datatypes from property template format to wikibase json values
+function fixed_datatype($datatype_in) {
+	$datatype_out = $datatype_in;
+	switch($datatype_in) {
+		case 'External identifier':
+			$datatype_out = 'external-id';
+			break;
+		case 'Item':
+		case 'item':
+			$datatype_out = 'wikibase-item';
+			break;
+		case 'URL':
+			$datatype_out = 'url';
+			break;
+		case 'media':
+			$datatype_out = 'commonsMedia';
+			break;
+		case 'monolingual text':
+			$datatype_out = 'monolingualtext';
+			break;
+		case 'property':
+			$datatype_out = 'wikibase-property';
+			break;
+		case 'tabular':
+			$datatype_out = 'tabular-data';
+			break;
+		case 'mathematical expression':
+			$datatype_out = 'math';
+			break;
+		case 'lexeme':
+			$datatype_out = 'wikibase-lexeme';
+			break;
+		case 'sense':
+			$datatype_out = 'wikibase-sense';
+			break;
+		case 'form':
+			$datatype_out = 'wikibase-form';
+			break;
+	}
+	return $datatype_out;
+}
+
 function label_and_proposal_to_qs_string($label_text, $proposal_text, $proposal_url) {
 	$label_template_list = [];
 	$label = extract_templates($label_text, $label_template_list);
@@ -106,7 +148,7 @@ function label_and_proposal_to_qs_string($label_text, $proposal_text, $proposal_
 	if ($status != 'ready') {
 		return "PROPOSAL CANNOT BE CREATED: 'status' is not 'ready'";
 	}
-	$datatype = $proposal_fields['datatype'];
+	$datatype = fixed_datatype($proposal_fields['datatype']);
 	if (empty($datatype)) {
 		fwrite(STDERR, "Error: datatype not set in proposal");
 		return "PROPOSAL CANNOT BE CREATED: 'datatype' not set";
