@@ -50,6 +50,27 @@ function reinsert_templates_in_string_value($template_list, $content) {
 	return $content;
 }
 
+function format_object_by_datatype($datatype, $value) {
+	$formatted_value = $value;
+	switch($datatype) {
+		case 'external-id':
+		case 'string':
+		case 'media':
+		case 'URL':
+		case 'mathematical expression':
+		case 'musical-notation':
+			$formatted_value = "\"{$value}\"";
+			break;
+		case 'time':
+			$formatted_value = "+{$value}";
+			break;
+		case 'globe-coordinate':
+			$formatted_value = "@{$value}";
+			break;
+	}
+	return $formatted_value;
+}
+
 function proposal_examples_to_qs_string($proposal_text, $property_id) {
 	$proposal = preg_replace('/^{{/', '', $proposal_text);
 	$proposal = preg_replace('/}}$/', '', $proposal);
@@ -93,6 +114,7 @@ function proposal_examples_to_qs_string($proposal_text, $property_id) {
 	}
 	
 	$qs_commands = "";
+	$datatype = $proposal_fields['datatype'];
 
 	foreach (array_keys($proposal_fields) as $field) {
 		if (str_starts_with($field, 'example')) {
@@ -106,8 +128,24 @@ function proposal_examples_to_qs_string($proposal_text, $property_id) {
 			if (preg_match('/(\S+)\]/', $example_object, $matches)) {
 				$example_object = $matches[1];
 			}
-			if (str_starts_with($example_parts[0], 'Q')) {
-				$qs_commands .= "{$property_id}\tP1855\t{$example_subject}\t{$property_id}\t\"{$example_object}\"\n";
+			$formatted_example_object = format_object_by_datatype($datatype, $example_object);
+			
+			$example_property_id = None;
+			if (str_starts_with($example_subject, 'Q')) {
+				$example_property_id = 'P1855';
+			}
+			if (str_starts_with($example_subject, 'P')) {
+				$example_property_id = 'P2271';
+			}
+			if (str_starts_with($example_subject, 'L')) {
+				$example_property_id = 'P5192';
+			}
+			if (str_starts_with($example_subject, 'commons:') ||
+				str_starts_with($example_subject, 'File:')) {
+				$example_property_id = 'P6685';
+			}
+			if ($example_property_id) {
+				$qs_commands .= "{$property_id}\t{$example_property_id}\t{$example_subject}\t{$property_id}\t{$formatted_example_object}\n";
 			}
 		}
 	}
