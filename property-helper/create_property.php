@@ -121,6 +121,8 @@ function label_and_proposal_to_qs_string($label_text, $proposal_text, $proposal_
 					str_replace('P', '', $template_parts[1]);
 				break;
 			case 'Q':
+			case 'Q\'':
+			case 'Qfr':
 				$adjusted_value = 'Q' . 
 					str_replace('Q', '', $template_parts[1]);
 				break;
