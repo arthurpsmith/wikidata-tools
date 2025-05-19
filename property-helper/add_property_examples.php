@@ -88,6 +88,7 @@ function proposal_examples_to_qs_string($proposal_text, $property_id) {
 		$adjusted_value = $template_line;
 		switch(trim($template_parts[0])) {
 			case 'P':
+			case 'Pfr':
 				$adjusted_value = 'P' . 
 					str_replace('P', '', $template_parts[1]);
 				break;
