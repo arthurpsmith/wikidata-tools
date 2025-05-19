@@ -117,6 +117,7 @@ function label_and_proposal_to_qs_string($label_text, $proposal_text, $proposal_
 		$adjusted_value = $template_line;
 		switch(trim($template_parts[0])) {
 			case 'P':
+			case 'Pfr':
 				$adjusted_value = 'P' . 
 					str_replace('P', '', $template_parts[1]);
 				break;
@@ -281,7 +282,7 @@ $proposal_file = remove_html_comments($proposal_file);
 $proposal_sections = [];
 $pf_parts = preg_split("/==+/", $proposal_file);
 foreach ($pf_parts AS $index => $pf_part) {
-	if (preg_match('/\s*{{\s*Property proposal/', $pf_part)) {
+	if (preg_match('/\s*{{\s*Property proposal/i', $pf_part)) {
 		$proposal_sections[] = ['label' => $pf_parts[$index-1],
 			'proposal' => trim($pf_part)];
 	}
