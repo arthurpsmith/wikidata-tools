@@ -102,7 +102,13 @@ function proposal_examples_to_qs_string($proposal_text, $property_id) {
 			case 'statement':
 			case 'claim':
 				$subject = trim($template_parts[1]);
+				if (str_starts_with($subject, '1=')) {
+					$subject = substr($subject, 2);
+				}
 				$object = trim($template_parts[3]);
+				if (str_starts_with($object, '3=')) {
+					$object = substr($object, 2);
+				}
 				$adjusted_value = "$subject - $object";
 				break;
 			case 'TranslateThis':
