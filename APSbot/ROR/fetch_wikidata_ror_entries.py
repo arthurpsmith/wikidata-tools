@@ -1,14 +1,17 @@
 import csv
 import json
 from urllib.parse import urlencode
-from urllib.request import urlopen
+from urllib.request import Request,urlopen
 
 sparql_api_url = 'https://query.wikidata.org/sparql'
+user_agent = 'fetch_wikidata_ror_entries.py (https://github.com/arthurpsmith/wikidata-tools/tree/master/APSbot/ROR; arthurpsmith@gmail.com)'
 
 def get_sparql(query):
     query_params = urlencode({'query': query, 'format': 'json'})
+    headers = {'User-Agent': user_agent}
     url = '{0}?{1}'.format(sparql_api_url, query_params)
-    with urlopen(url) as response:
+    req = Request(url, headers=headers)
+    with urlopen(req) as response:
         raw = response.read()
     response_data = json.loads(raw.decode('utf-8'))
     return response_data['results']['bindings']
