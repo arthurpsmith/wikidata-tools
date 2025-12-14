@@ -317,7 +317,7 @@ if (! empty($id) ) {
     $link_string = "$musician/tracks/$trackno";
     break;
   case 13850: // Corporation Number in Canada
-	$url_prefix = "https://ised-isde.canada.ca/cc/lgcy/fdrlCrpDtls.html?corpId="
+	$url_prefix = "https://ised-isde.canada.ca/cc/lgcy/fdrlCrpDtls.html?corpId=";
 	$link_string = str_replace("-", "", $id) ;
     break;
   default:
