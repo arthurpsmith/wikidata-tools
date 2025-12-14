@@ -316,6 +316,10 @@ if (! empty($id) ) {
     $trackno = implode(':', $promodj_parts);
     $link_string = "$musician/tracks/$trackno";
     break;
+  case 13850: // Corporation Number in Canada
+	$url_prefix = "https://ised-isde.canada.ca/cc/lgcy/fdrlCrpDtls.html?corpId="
+	$link_string = str_replace("-", "", $id) ;
+    break;
   default:
     if (! empty($exp) ) {
       preg_match('/'.$exp.'/', $id, $a);
@@ -404,6 +408,7 @@ print "<li>Dictionary of Occupational Titles code - property 8679</li>";
 print "<li>wiki.gg article ID - property 11988</li>";
 print "<li>NexusMods mod ID - property 13405</li>";
 print "<li>PromoDJ track ID - property 13524</li>";
+print "<li>Corporation Number in Canada - property 13850</li>";
 print "</ul>";
 
 print "The <a href=\"https://github.com/arthurpsmith/wikidata-tools/tree/master/wikidata-externalid-url\">source code for this service</a> is available under the <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>." ;
