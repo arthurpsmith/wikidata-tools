@@ -282,6 +282,15 @@ if (! empty($id) ) {
       $link_string = preg_replace('/^.*\//', '', $id) ;
     }
     break ;
+  case 8419:
+    $link_string = strtr($id, array(
+	'/' => '*s*',
+	'&' => '*a*',
+	'.' => '*d*',
+	'?' => '*q*',
+	'#' => '*h*',
+    ));
+    break;
   case 8679: // Dictionary of Occupational Titles code
     $code_parts = array();
     preg_match('/(\d+)\.(\d+)\-(\d+)/', $id, $code_parts);
@@ -404,6 +413,7 @@ print "<li>Epitafier.se ID - property 6996</li>";
 print "<li>NLP ID - property 1695</li>";
 print "<li>ft.dk politician identifier - property 7882</li>";
 print "<li>VcBA ID - property 8034</li>";
+print "<li>Archive of Our Own tag - property 8419</li>";
 print "<li>Dictionary of Occupational Titles code - property 8679</li>";
 print "<li>wiki.gg article ID - property 11988</li>";
 print "<li>NexusMods mod ID - property 13405</li>";
