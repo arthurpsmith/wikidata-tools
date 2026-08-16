@@ -319,6 +319,12 @@ if (! empty($id) ) {
     $numeric_id = implode(':', $nexusmods_parts);
     $link_string = "https://www.nexusmods.com/$slug/mods/$numeric_id";
     break;
+  case 13427: // ArchivesSpace agent ID
+    $archives_parts = explode(":", $id);
+    $hostname = array_shift($archives_parts);
+    $endpoint = implode(':', $archives_parts);
+    $link_string = "https://$hostname/agents/$endpoint";
+    break;
   case 13524: // PromoDJ track ID
     $promodj_parts = explode(":", $id);
     $musician = array_shift($promodj_parts);
